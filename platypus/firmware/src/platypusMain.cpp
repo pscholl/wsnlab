@@ -19,6 +19,7 @@ batgauge_edison* m_bat;
 imu_edison* m_imu;
 
 // default config
+int m_i2c_bus = 1;
 uint8_t m_mpu_address = 0x68;
 uint8_t m_dsp_hands   = 3;
 int m_log_level = 1;
@@ -48,10 +49,12 @@ void sig_handler(int signo) {
 
 //_______________________________________________________________________________________________________
 // string to bool
-bool stob(std::string s) {
+bool stob(std::string s, bool def = false) {
   if (s == "true" || s == "1")
     return true;
-  else if (s == "false" || s != "1")
+  else if (s == "")
+    return def;
+  else if (s == "false" || s == "0")
     return false;
   return false;
 }
@@ -64,6 +67,9 @@ void parseConfig(std::string path) {
     printf("[MAIN] Using default config instead.\n");
     fflush(stdout);
     return;
+  } else {
+    printf("[MAIN] Using config file \"%s\"\n", path.c_str());
+    fflush(stdout);
   }
 
   std::map<std::string, std::string> cfg;
@@ -88,16 +94,17 @@ void parseConfig(std::string path) {
   cfg_file.close();
 
   // store configs
+  m_i2c_bus = (int) std::stoi(cfg["i2c_bus"]);
   m_mpu_address = (uint8_t) std::stoi(cfg["mpu_address"]);
   m_dsp_hands   = (uint8_t) std::stoi(cfg["dsp_hands"]);
   m_log_level = std::stoi(cfg["log_level"]);
   m_alert_threshold = std::stoi(cfg["alert_threshold"]);
-  m_start_imu = stob(cfg["start_imu"]);
-  m_start_ldc = stob(cfg["start_ldc"]);
-  m_start_env = stob(cfg["start_env"]);
-  m_start_dsp = stob(cfg["start_dsp"]);
-  m_start_mcu = stob(cfg["start_mcu"]);
-  m_start_bat = stob(cfg["start_bat"]);
+  m_start_imu = stob(cfg["start_imu"], m_start_imu);
+  m_start_ldc = stob(cfg["start_ldc"], m_start_ldc);
+  m_start_env = stob(cfg["start_env"], m_start_env);
+  m_start_dsp = stob(cfg["start_dsp"], m_start_dsp);
+  m_start_mcu = stob(cfg["start_mcu"], m_start_mcu);
+  m_start_bat = stob(cfg["start_bat"], m_start_bat);
 }
 
 //_______________________________________________________________________________________________________
@@ -111,12 +118,13 @@ void imu_isr(void*) {
     return;
 
   if (m_imu->hasFIFOInt(is)) {
-    printf("[IMU] FIFO interrupt\n");
+    printf("[MAIN] FIFO interrupt\n");
     m_imu->FIFOrst();
   }
   if (m_imu->hasWOMInt(is)) {
-    printf("[IMU] WOM interrupt\n");
-    m_pps->tap_event();
+    DisplayStates tap = m_pps->tap_event();
+    if (tap != DisplayStates::NOCHANGE)
+      printf("[MAIN] WOM interrupt, new display state: %d\n", tap);
   }
   fflush(stdout);
   last_int = Clock::now();
@@ -139,7 +147,7 @@ int main(int argc, char** argv) {
 
   // Set up IMU, LDC
   if (m_start_imu) {
-    m_imu = m_pps->imu_init(m_mpu_address, m_start_env);
+    m_imu = m_pps->imu_init(m_i2c_bus, m_mpu_address, m_start_env);
     mraa::Gpio* imu_interrupt = new mraa::Gpio(36);
     imu_interrupt->dir(mraa::DIR_IN);
     imu_interrupt->isr(mraa::EDGE_FALLING, imu_isr, NULL);

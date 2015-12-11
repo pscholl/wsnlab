@@ -1,16 +1,19 @@
 /*
-* Author: Roshna George, Sebastian Boettcher
-* Code for the Implementation of the IMU 9DOF on Edison Mini Breakout board
-* Grove IMU based on MPU9150.
+* Author: Sebastian Boettcher
+* IMU interface for the Platypus, using MPU 9150/9250/9255
+* includes Bosch environmental sensor access
 *
 */
 
 #ifndef imu_edison_h
 #define imu_edison_h
 
+#include <vector>
+#include <math.h>
+
 #include "mraa.hpp"
 
-#include <vector>
+#include "./quaternion.h"
 
 
 // Register names according to the datasheet.
@@ -109,13 +112,23 @@
 #define MPU_FIFO_R_W           0x74   // R/W
 #define MPU_WHO_AM_I           0x75   // R
 
-//MPU Compass
-#define MPU_CMPS_XOUT_L        0x4A   // R
-#define MPU_CMPS_XOUT_H        0x4B   // R
-#define MPU_CMPS_YOUT_L        0x4C   // R
-#define MPU_CMPS_YOUT_H        0x4D   // R
-#define MPU_CMPS_ZOUT_L        0x4E   // R
-#define MPU_CMPS_ZOUT_H        0x4F   // R
+//Magnetometer Registers
+#define COMPASS_WHO_AM_I 0x00
+#define COMPASS_INFO     0x01
+#define COMPASS_ST1      0x02
+#define COMPASS_XOUT_L   0x03
+#define COMPASS_XOUT_H   0x04
+#define COMPASS_YOUT_L   0x05
+#define COMPASS_YOUT_H   0x06
+#define COMPASS_ZOUT_L   0x07
+#define COMPASS_ZOUT_H   0x08
+#define COMPASS_ST2      0x09
+#define COMPASS_CNTL     0x0A
+#define COMPASS_ASTC     0x0C
+#define COMPASS_I2CDIS   0x0F
+#define COMPASS_ASAX     0x10
+#define COMPASS_ASAY     0x11
+#define COMPASS_ASAZ     0x12
 
 
 // I2C address 0x69 could be 0x68 depends on your wiring.
@@ -171,7 +184,7 @@ struct BME_calibration {
 class imu_edison {
  public:
   // constructor, creates a mraa I2C object
-  imu_edison(uint8_t i2c_addr = MPU_I2C_ADDR, bool init_env = false);
+  imu_edison(int i2c_bus = 1, uint8_t i2c_addr = MPU_I2C_ADDR, bool init_env = false);
   // destructor, currently does nothing
   ~imu_edison();
 
@@ -181,10 +194,17 @@ class imu_edison {
   // initializes the IMU
   void setupIMU();
 
+  // get the IDs of the attached devices
+  inline int getID() {return m_ID;}
+  inline int getMagID() {return m_ID_mag;}
+  inline int getEnvID() {return m_ID_env;}
+
   // reads the current accelerometer, gyroscope and temperature values
   // returns a vector according to [ACCEL_X, ACCEL_Y, ACCEL_Z, GYRO_X, GYRO_Y, GYRO_Z, TEMP]
   // raw 16Bit values, no conversion
   std::vector<int16_t> readRawIMU();
+  // reads and returns only the temperature
+  int16_t readRawTemp();
 
   // normalizes and converts 16Bit raw data to 8Bit raw data, loss of precision!
   std::vector<int8_t> convertData_2to1(std::vector<int16_t> in);
@@ -193,8 +213,8 @@ class imu_edison {
 
   // returns readable data from given 8Bit or 16Bit raw data
   // accel values in m/s^2, gyro values in deg/s, temperature in degrees Celsius
-  std::vector<float> convertData_1tor(std::vector<int8_t> in);
-  std::vector<float> convertData_2tor(std::vector<int16_t> in);
+  std::vector<float> toReadable(std::vector<int8_t> in);
+  std::vector<float> toReadable(std::vector<int16_t> in);
 
   // returns the Interrupt Status register as is
   uint8_t getIntStatus();
@@ -223,8 +243,22 @@ class imu_edison {
   uint32_t compP(int32_t adc_P, int32_t adc_T);
   uint32_t compH(int32_t adc_H, int32_t adc_T);
 
-  // reads the IMU ES data, compensates, and returns values via reference
+  // reads the EnvSens data, and returns compensated values
   void getEnvData(int32_t &comp_T, uint32_t &comp_P, uint32_t &comp_H);
+  void getEnvData(float &comp_T, float &comp_P, float &comp_H);
+
+  // reads the Compass data, and returns raw values
+  void getCompassData(int16_t &mag_X, int16_t &mag_Y, int16_t &mag_Z);
+  // reads the Compass data, and returns compensated values in [mGs]
+  void getCompassData(float &mag_X, float &mag_Y, float &mag_Z);
+
+  // filter update step for the madgwick IMU filter
+  // data <ax,ay,az,wx,wy,wz> [m/s^2,deg/s]
+  // dT [seconds]
+  // error [deg/s]
+  void MadgwickIMUFilterStep(std::vector<float> data, float dT, float error, quaternion<float> &q);
+  // same as above, but with magnetometer measurements (accesses I2C bus!)
+  void MadgwickFilterStep(std::vector<float> data, float dT, float error, quaternion<float> &q);
 
  private:
   // initialize environmental sensor
@@ -232,6 +266,9 @@ class imu_edison {
 
   // reads the calibration data for the BME device
   void getENVCalib();
+
+  // initialize internal compass
+  void initCompass();
 
   // write one byte [data] to register [addr] at i2c address [i2c]
   void writeRegister(uint8_t addr, uint8_t data, uint8_t i2c);
@@ -243,10 +280,15 @@ class imu_edison {
   int16_t readRegister(uint8_t addrH, uint8_t addrL, uint8_t i2c);
 
   mraa::I2c* m_i2c;
+  int m_i2c_bus;
   uint8_t m_mpu_address;
   // BME calibration data, in the order of Table 16 in the BME280 datasheet
   BME_calibration m_env_calib;
   bool m_init_env;
+
+  float m_HCalib_X, m_HCalib_Y, m_HCalib_Z;
+
+  int m_ID, m_ID_mag, m_ID_env;
 
 };
 

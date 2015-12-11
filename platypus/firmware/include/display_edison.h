@@ -30,6 +30,11 @@ class display_edison {
   // destructor, closes mraa ports
   ~display_edison();
 
+  // init display
+  void init();
+  // stop display
+  void stop();
+
   // prints string s to the display at the given position
   void print(std::string s, int x, int y, bool centered = false, bool opaque = true);
   // prints float f to the display at the given position and with given precision
@@ -52,6 +57,7 @@ class display_edison {
   void clear();
 
   bool is_refreshed() {return m_refreshed;}
+  bool is_active() {return m_active;}
 
  private:
   int ccharge; // charge cache 
@@ -59,6 +65,7 @@ class display_edison {
   uint8_t c_hands;
   tContext g_sContext;
   bool m_refreshed;
+  bool m_active;
 };
 
 #endif // display_edison_h

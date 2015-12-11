@@ -46,15 +46,19 @@
 
 
 enum class DisplayStates {
+  NOCHANGE,
   IDLE,
   INIT,
   OFF,
   CLOCK,
   MENU_BACK,
   MENU_WIFI,
+  MENU_BT,
   MENU_SAVE,
   MENU_STATS,
-  STATS
+  MENU_CONFIG,
+  STATS,
+  CONFIG
 };
 
 #define MENU_TIME 5
@@ -73,7 +77,7 @@ class platypus {
 
   // init
   void display_init(uint8_t clk_hands);
-  imu_edison* imu_init(uint8_t i2c_addr, bool env_init);
+  imu_edison* imu_init(int i2c_bus, uint8_t i2c_addr, bool env_init);
   void mcu_init();
   void ldc_init();
   batgauge_edison* bat_init();
@@ -145,7 +149,8 @@ class platypus {
   std::recursive_mutex m_mtx_time;
   std::recursive_mutex m_mtx_write;
 
-  bool m_force_save;
+  std::atomic<bool> m_force_save;
+  std::atomic<bool> m_saving;
 
   std::vector<int16_t> m_imu_data;
 
@@ -157,6 +162,7 @@ class platypus {
   DisplayStates m_dsp_state;
 
   bool m_wifi_enabled;
+  bool m_bt_enabled;
 
 };
 

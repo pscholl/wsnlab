@@ -9,7 +9,22 @@
 
 
 //_______________________________________________________________________________________________________
-display_edison::display_edison(uint8_t clk_hands) : c_hands(clk_hands) {
+display_edison::display_edison(uint8_t clk_hands) : c_hands(clk_hands), m_active(false) {
+  init();
+}
+
+
+//_______________________________________________________________________________________________________
+display_edison::~display_edison() {
+  stop();
+}
+
+
+//_______________________________________________________________________________________________________
+void display_edison::init() {
+  if (m_active)
+    return;
+
   HAL_LCD_initDisplay();
   Graphics_initContext(&g_sContext, &g_sharp96x96LCD);
   Graphics_setForegroundColor(&g_sContext, ClrWhite);
@@ -17,15 +32,20 @@ display_edison::display_edison(uint8_t clk_hands) : c_hands(clk_hands) {
   Graphics_setFont(&g_sContext, &g_sFontFixed6x8);
   Graphics_clearDisplay(&g_sContext);
   Graphics_flushBuffer(&g_sContext);
+
+  m_active = true;
   
   printf("[DSP] Initialized.\n");
   fflush(stdout);
 }
-
-
 //_______________________________________________________________________________________________________
-display_edison::~display_edison() {
+void display_edison::stop() {
+  if (!m_active)
+    return;
+
   Display_Stop();
+
+  m_active = false;
 
   printf("[DSP] Stopped.\n");
   fflush(stdout);

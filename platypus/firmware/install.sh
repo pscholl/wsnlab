@@ -15,6 +15,14 @@ echo "> Building firmware"
 make -j
 
 echo
+echo "> Testing platypus"
+bin/ppsTestMain --id-only
+
+# only continue if tests successful
+RETVAL=$?
+[ $RETVAL -ne 0 ] && exit
+
+echo
 echo "> Copying some relevant files"
 cp platypus.service /lib/systemd/system/
 cp bin/platypusMain /home/root/
