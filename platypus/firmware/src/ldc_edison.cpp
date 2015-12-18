@@ -13,6 +13,7 @@
 ldc_edison::ldc_edison(uint8_t i2c_addr) : m_ldc_address(i2c_addr), m_error(false) {
   m_i2c = new mraa::I2c(1); // LDC is on bus 1
   m_i2c->address(m_ldc_address);
+  init();
 }
 
 

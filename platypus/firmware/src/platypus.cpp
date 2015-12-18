@@ -11,8 +11,9 @@
 //_______________________________________________________________________________________________________
 platypus::platypus(int debug)
  :  m_dsp(NULL), m_imu(NULL),
-    m_dsp_init(false), m_imu_init(false), m_env_init(false), m_mcu_init(false), m_ldc_init(false), m_bat_init(false),
-    m_active(false), m_force_save(false), m_data_idx(0), m_debug(debug), m_dsp_state(DisplayStates::IDLE), m_wifi_enabled(true)
+    m_dsp_init(false), m_imu_init(false), m_env_init(false), m_mcu_init(false), m_ldc_init(false), m_bat_init(false), m_active(false),
+    m_force_save(false), m_saving(false), m_data_idx(0), m_debug(debug), m_dsp_state(DisplayStates::IDLE),
+    m_wifi_enabled(true), m_bt_enabled(false)
 {
   m_imu_data = std::vector<int16_t>(7, 0);
 }
@@ -45,8 +46,8 @@ void platypus::display_init(uint8_t clk_hands) {
 }
 
 //_______________________________________________________________________________________________________
-imu_edison* platypus::imu_init(uint8_t i2c_addr, bool env_init) {
-  m_imu = new imu_edison(i2c_addr, env_init);
+imu_edison* platypus::imu_init(int i2c_bus, uint8_t i2c_addr, bool env_init) {
+  m_imu = new imu_edison(i2c_bus, i2c_addr, env_init);
 
   //m_imu->sleep(false);
   m_imu->setupIMU();
@@ -122,14 +123,14 @@ void platypus::t_display() {
     if (!m_dsp_init)
       break;
 
-    std::vector<float> data = m_imu->convertData_2tor(m_imu_data);
+    std::vector<float> data = m_imu->toReadable(m_imu_data);
 
     printDebug(last_min, data);
 
     state_changed = false;
 
     switch (m_dsp_state) {
-      // INIT: display welcome message, switch to OFF after 15sec
+      // INIT: display welcome message, switch to OFF
       case DisplayStates::INIT:
         if (prev_dsp != m_dsp_state) {
           sec_counter = 0;
@@ -137,7 +138,7 @@ void platypus::t_display() {
           m_dsp->print("WELCOME TO", 64, 60, true);
           m_dsp->print("PLATYPUS", 64, 70, true);
           m_dsp->flush();
-        } else if (sec_counter < 15) {
+        } else if (sec_counter < 5) {
           ++sec_counter;
         } else {
           sec_counter = 0;
@@ -146,17 +147,18 @@ void platypus::t_display() {
         }
         break;
 
-      // OFF: clear display once
+      // OFF: stop display
       case DisplayStates::OFF:
         if (prev_dsp != m_dsp_state) {
-          m_dsp->clear();
-          m_dsp->flush();
+          m_dsp->stop();
         }
         break;
 
       // CLOCK: display analog clock and battery charge, update once per minute, switch to OFF after some time
       case DisplayStates::CLOCK:
         if (prev_dsp != m_dsp_state) {
+          if (!m_dsp->is_active())
+            m_dsp->init();
           m_dsp->clear();
           m_dsp->analogClock(true);
           if (m_bat_init)
@@ -176,7 +178,7 @@ void platypus::t_display() {
         }
         break;
 
-      // MENU_BACK: display complete menu, switch to CLOCK after 15sec
+      // MENU_BACK: display complete menu, switch to CLOCK
       case DisplayStates::MENU_BACK:
         if (prev_dsp != m_dsp_state) {
           sec_counter = 0;
@@ -194,7 +196,7 @@ void platypus::t_display() {
         }
         break;
 
-      // MENU_WIFI: move menu pointer, toggle wifi and switch to CLOCK after 15sec
+      // MENU_WIFI: move menu pointer, toggle wifi and switch to CLOCK
       case DisplayStates::MENU_WIFI:
         if (prev_dsp != m_dsp_state) {
           sec_counter = 0;
@@ -219,14 +221,39 @@ void platypus::t_display() {
         }
         break;
 
-      // MENU_SAVE: move menu pointer, save data and switch to CLOCK after 15sec
-      case DisplayStates::MENU_SAVE:
+      // MENU_BT: move menu pointer, toggle bluetooth and switch to CLOCK
+      case DisplayStates::MENU_BT:
         if (prev_dsp != m_dsp_state) {
           sec_counter = 0;
           printMenu(3);
           m_dsp->flush();
         } else if (sec_counter < MENU_TIME) {
           printMenu(3);
+          m_dsp->print(MENU_TIME - sec_counter, 64, 100, true);
+          m_dsp->flush();
+          ++sec_counter;
+        } else {
+          if (m_bt_enabled) {
+            system("rfkill block bluetooth");
+            m_bt_enabled = false;
+          } else {
+            system("rfkill unblock bluetooth");
+            m_bt_enabled = true;
+          }
+          sec_counter = 0;
+          m_dsp_state = DisplayStates::MENU_BACK;
+          state_changed = true;
+        }
+        break;
+
+      // MENU_SAVE: move menu pointer, save data and switch to CLOCK
+      case DisplayStates::MENU_SAVE:
+        if (prev_dsp != m_dsp_state) {
+          sec_counter = 0;
+          printMenu(4);
+          m_dsp->flush();
+        } else if (sec_counter < MENU_TIME) {
+          printMenu(4);
           m_dsp->print(MENU_TIME - sec_counter, 64, 100, true);
           m_dsp->flush();
           ++sec_counter;
@@ -238,14 +265,14 @@ void platypus::t_display() {
         }
         break;
 
-      // MENU_STATS: move menu pointer, switch to STATS after 15sec
+      // MENU_STATS: move menu pointer, switch to STATS
       case DisplayStates::MENU_STATS:
         if (prev_dsp != m_dsp_state) {
           sec_counter = 0;
-          printMenu(4);
+          printMenu(5);
           m_dsp->flush();
         } else if (sec_counter < MENU_TIME) {
-          printMenu(4);
+          printMenu(5);
           m_dsp->print(MENU_TIME - sec_counter, 64, 100, true);
           m_dsp->flush();
           ++sec_counter;
@@ -256,8 +283,46 @@ void platypus::t_display() {
         }
         break;
 
+        // MENU_CONFIG: move menu pointer, switch to CONFIG
+      case DisplayStates::MENU_CONFIG:
+        if (prev_dsp != m_dsp_state) {
+          sec_counter = 0;
+          printMenu(6);
+          m_dsp->flush();
+        } else if (sec_counter < MENU_TIME) {
+          printMenu(6);
+          m_dsp->print(MENU_TIME - sec_counter, 64, 100, true);
+          m_dsp->flush();
+          ++sec_counter;
+        } else {
+          sec_counter = 0;
+          m_dsp_state = DisplayStates::CONFIG;
+          state_changed = true;
+        }
+        break;
+
       // STATS: display stats
       case DisplayStates::STATS:
+        {
+          m_dsp->clear();
+          m_dsp->print("Accel [m/s^2]:", 5, 5);
+          m_dsp->print(data[0], 15, 15, 2);
+          m_dsp->print(data[1], 15, 25, 2);
+          m_dsp->print(data[2], 15, 35, 2);
+          m_dsp->print("Gyro [deg/s]:", 5, 45);
+          m_dsp->print(data[3], 15, 55, 2);
+          m_dsp->print(data[4], 15, 65, 2);
+          m_dsp->print(data[5], 15, 75, 2);
+          m_dsp->print("Temp [degC]:", 5, 85);
+          m_dsp->print(data[6], 15, 95, 2);
+          m_dsp->print("RAM [Bytes]:", 5, 105);
+          m_dsp->print((int)m_data_memory[m_data_idx].size(), 15, 115);
+          m_dsp->flush();
+          break;
+        }
+
+        // CONFIG: display config
+      case DisplayStates::CONFIG:
         {
           m_dsp->clear();
           std::map<std::string, std::string> IPs = getIPs();
@@ -265,16 +330,8 @@ void platypus::t_display() {
             IPs["wlan0"] = "N/A";
           m_dsp->print("IP:", 5, 5);
           m_dsp->print(IPs["wlan0"], 15, 15);
-          m_dsp->print("Accel [m/s^2]:", 5, 25);
-          m_dsp->print(data[0], 15, 35, 2);
-          m_dsp->print(data[1], 15, 45, 2);
-          m_dsp->print(data[2], 15, 55, 2);
-          m_dsp->print("Gyro [deg/s]:", 5, 65);
-          m_dsp->print(data[3], 15, 75, 2);
-          m_dsp->print(data[4], 15, 85, 2);
-          m_dsp->print(data[5], 15, 95, 2);
-          m_dsp->print("RAM [Bytes]:", 5, 105);
-          m_dsp->print((int)m_data_memory[m_data_idx].size(), 15, 115);
+          m_dsp->print("RAM [Bytes]:", 5, 25);
+          m_dsp->print((int)m_data_memory[m_data_idx].size(), 15, 35);
           m_dsp->flush();
           break;
         }
@@ -305,7 +362,7 @@ void platypus::t_imu() {
     //m_imu_data = m_imu->readRawIMU();
 
     // write data to flash after 1024*1024*128 = 134217728 B = 128 MiB
-    if (m_force_save || m_data_memory[m_data_idx].size() >= 134217728) {
+    if (!m_saving && (m_force_save || m_data_memory[m_data_idx].size() >= 134217728)) {
       // async call write function so data collection can continue while writing to flash
       // TODO: get this to work with overloaded function writeDataToFlash(uint8_t)
       handles.push_back(std::async(std::launch::async, &platypus::writeDataToFlashIDX, this, m_data_idx));
@@ -326,6 +383,8 @@ void platypus::t_imu() {
       for (size_t i = 0; i < 6; ++i)
         m_imu_data[i] = fifo_data[fifo_data.size() - 6 + i];  
     }
+
+    m_imu_data[6] = m_imu->readRawTemp();
 
     //usleep(100000);
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
@@ -550,6 +609,8 @@ void platypus::writeDataToFlash(std::vector<uint8_t> &data) {
 
   std::lock_guard<std::recursive_mutex> write_lock(m_mtx_write);
 
+  m_saving = true;
+
   std::stringstream filename;
   filename << "/home/root/pps_logs/";
 
@@ -595,6 +656,8 @@ void platypus::writeDataToFlash(std::vector<uint8_t> &data) {
   // clear data vector and shrink allocated memory down to 0 again
   data.clear();
   data.shrink_to_fit();
+
+  m_saving = false;
 }
 
 
@@ -604,6 +667,14 @@ void platypus::writeDataToFlash(std::vector<uint8_t> &data) {
 
 //_______________________________________________________________________________________________________
 DisplayStates platypus::tap_event() {
+  std::vector<float> curr_imu = m_imu->toReadable(m_imu_data);
+  if (curr_imu[0] > 1 || curr_imu[0] < -1)
+    return DisplayStates::NOCHANGE;
+  if (curr_imu[1] > 1 || curr_imu[1] < -1)
+    return DisplayStates::NOCHANGE;
+  if (curr_imu[2] < 9)
+    return DisplayStates::NOCHANGE;
+
   switch (m_dsp_state) {
     case DisplayStates::INIT:
       break;
@@ -621,6 +692,10 @@ DisplayStates platypus::tap_event() {
       break;
 
     case DisplayStates::MENU_WIFI:
+      m_dsp_state = DisplayStates::MENU_BT;
+      break;
+
+    case DisplayStates::MENU_BT:
       m_dsp_state = DisplayStates::MENU_SAVE;
       break;
 
@@ -629,10 +704,18 @@ DisplayStates platypus::tap_event() {
       break;
 
     case DisplayStates::MENU_STATS:
+      m_dsp_state = DisplayStates::MENU_CONFIG;
+      break;
+
+    case DisplayStates::MENU_CONFIG:
       m_dsp_state = DisplayStates::MENU_BACK;
       break;
 
     case DisplayStates::STATS:
+      m_dsp_state = DisplayStates::MENU_BACK;
+      break;
+
+    case DisplayStates::CONFIG:
       m_dsp_state = DisplayStates::MENU_BACK;
       break;
 
@@ -694,12 +777,20 @@ void platypus::printDebug(int &last_min, std::vector<float> data) {
 void platypus::printMenu(int pos) {
   m_dsp->clear();
   m_dsp->print("  Back", 5, 5);
+
   if (m_wifi_enabled)
     m_dsp->print("  Disable WiFi", 5, 15);
   else
     m_dsp->print("  Enable WiFi", 5, 15);
-  m_dsp->print("  Save RAM data", 5, 25);
-  m_dsp->print("  Display Stats", 5, 35);
+
+  if (m_bt_enabled)
+    m_dsp->print("  Disable Bluetooth", 5, 25);
+  else
+    m_dsp->print("  Enable Bluetooth", 5, 25);
+
+  m_dsp->print("  Save RAM Data", 5, 35);
+  m_dsp->print("  Display Stats", 5, 45);
+  m_dsp->print("  Display Config", 5, 55);
   m_dsp->print(">", 5, 5 + (10 * (pos-1)));
 }
 

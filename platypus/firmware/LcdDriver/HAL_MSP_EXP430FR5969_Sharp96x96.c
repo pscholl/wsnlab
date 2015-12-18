@@ -15,6 +15,7 @@
 
 
 mraa_gpio_context SCS; //SPI Chip Select
+mraa_gpio_context VDD; //VDD
 mraa_spi_context spi;
 mraa_pwm_context pwm;
 
@@ -34,6 +35,10 @@ void GPIO_Init(void)
 	
 	mraa_gpio_dir(SCS, MRAA_GPIO_OUT);
 	//printf("Port directions set\n");
+
+	VDD = mraa_gpio_init(31); // GP44
+	mraa_gpio_mode(VDD, MRAA_GPIO_PULLUP);
+	mraa_gpio_dir(VDD, MRAA_GPIO_OUT);
 }
 
 void SPI_Init(void)
@@ -103,8 +108,10 @@ void Display_Stop(void)
 {
   //reset all GPIOs to '0'
   mraa_gpio_write(SCS, 0);
+  mraa_gpio_write(VDD, 0);
   //close all GPIOs
   mraa_gpio_close(SCS);
+  mraa_gpio_close(VDD);
   //close all Peripherals
   mraa_spi_stop(spi);
   mraa_pwm_close(pwm);
@@ -127,6 +134,8 @@ void Display_Stop(void)
 void HAL_LCD_initDisplay(void)
 {
 	GPIO_Init();
+	usleep(100000);
+	HAL_LCD_enableDisplay();
 	usleep(100000);
 	SPI_Init();
 	usleep(100000);
@@ -264,6 +273,7 @@ void HAL_LCD_disableDisplay(void)
 {
 	//GPIO_setOutputLowOnPin(LCD_DISP_PORT, LCD_DISP_PIN);
 	//GPIO_setOutputLowOnPin(LCD_POWER_PORT, LCD_POWER_PIN);
+	mraa_gpio_write(VDD, 0);
 }
 
 //*****************************************************************************
@@ -278,7 +288,7 @@ void HAL_LCD_enableDisplay(void)
 {
 	//GPIO_setOutputHighOnPin(LCD_POWER_PORT, LCD_POWER_PIN);
 	//GPIO_setOutputHighOnPin(LCD_DISP_PORT, LCD_DISP_PIN);
-
+	mraa_gpio_write(VDD, 1);
 }
 
 

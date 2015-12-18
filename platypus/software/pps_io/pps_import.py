@@ -36,16 +36,17 @@ def pps_convtime(b1,b2,b3,b4):
 
 
 def pps_import_file(filename):
-	fsize = os.path.getsize(filename)
-	numheaders = int(fsize / (PAGESIZE + HEADERSIZE)) + 1
-	rawsize = fsize - (numheaders * HEADERSIZE)
-	samples = int(rawsize / SAMPLESIZE)
+	fsize = os.path.getsize(filename) # size of the file in bytes
+	numheaders = int(fsize / (PAGESIZE + HEADERSIZE)) + 1 # number of headers in the data (+1 for first header that is always present)
+	rawsize = fsize - (numheaders * HEADERSIZE) # size of sample data without headers in bytes
+	samples = int(rawsize / SAMPLESIZE) # number of samples in the sample data
 
 	data = np.recarray((samples,), dtype=desc_pps)
 	f = open(filename, "rb")
 
 	i = 0 # overall sample index
 	j = 0 # page sample index
+	k = 0 # header index
 	headernext = True # header indicator
 	while i < samples:
 		if headernext:
@@ -58,16 +59,21 @@ def pps_import_file(filename):
 			press = (bs[12]<<24)+(bs[13]<<16)+(bs[14]<<8)+(bs[15])
 			hum = (bs[16]<<24)+(bs[17]<<16)+(bs[18]<<8)+(bs[19])
 			headernext = False
-			j = 0
+			k += 1
+		elif k < numheaders:
+			bs = f.read(PAGESIZE)
+			bs = unpack("%sB"%len(bs), bs)
+			for x in range(int(PAGESIZE/SAMPLESIZE)):
+				data[i] = np.array((tme + seconds(x * (1 / SAMPLERATE)), (bs[0+(x*SAMPLESIZE)]<<8)+(bs[1+(x*SAMPLESIZE)]), (bs[2+(x*SAMPLESIZE)]<<8)+(bs[3+(x*SAMPLESIZE)]), (bs[4+(x*SAMPLESIZE)]<<8)+(bs[5+(x*SAMPLESIZE)]), (bs[6+(x*SAMPLESIZE)]<<8)+(bs[7+(x*SAMPLESIZE)]), (bs[8+(x*SAMPLESIZE)]<<8)+(bs[9+(x*SAMPLESIZE)]), (bs[10+(x*SAMPLESIZE)]<<8)+(bs[11+(x*SAMPLESIZE)]), l1, l2, temp, press, hum), dtype=desc_pps)
+				i += 1
+			headernext = True
 		else:
 			bs = f.read(SAMPLESIZE)
 			bs = unpack("%sB"%len(bs), bs)
 			data[i] = np.array((tme + seconds(j * (1 / SAMPLERATE)), (bs[0]<<8)+(bs[1]), (bs[2]<<8)+(bs[3]), (bs[4]<<8)+(bs[5]), (bs[6]<<8)+(bs[7]), (bs[8]<<8)+(bs[9]), (bs[10]<<8)+(bs[11]), l1, l2, temp, press, hum), dtype=desc_pps)
 			i += 1
 			j += 1
-			if j == PAGESIZE / SAMPLESIZE:
-				headernext = True
-			progress(i, samples)
+		progress(i, samples)
 
 	f.close()
 	if i > 0:
