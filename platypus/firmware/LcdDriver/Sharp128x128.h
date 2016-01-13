@@ -54,7 +54,7 @@
 extern const Graphics_Display g_sharp128x128LCD;
 
 extern void Sharp128x128_SendToggleVCOMCommand(void);
-extern void Sharp128x128_initDisplay(int res);
+extern void Sharp128x128_initDisplay(void);
 extern void Sharp128x128_disable(void);
 extern void Sharp128x128_enable(void);
 #endif // __SHARPLCD128_H__

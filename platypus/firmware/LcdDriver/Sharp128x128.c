@@ -168,7 +168,7 @@ static void Sharp128x128_InitializeDisplayBuffer(void *pvDisplayData,
 
 #else
   uint16_t i=0,j=0;
-  uint8_t *pucData = static_cast<uint8_t *>(pvDisplayData);
+  uint8_t *pucData = (uint8_t *)(pvDisplayData);
     for(i =0; i< LCD_VERTICAL_MAX_128; i++)
     for(j =0; j< (LCD_HORIZONTAL_MAX_128>>3); j++)
             *pucData++ = ucValue;

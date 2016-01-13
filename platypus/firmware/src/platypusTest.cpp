@@ -134,7 +134,7 @@ void parseArgs(int argc, char** argv) {
     std::vector<std::string> args;
     args.assign(argv + 1, argv + argc);
 
-    // check if custom config file is used, if not use ./config.cfg
+    // check if custom config file is used, if not use ./platypus.conf
     bool cfg_chg = false;
     for (size_t i = 0; i < args.size(); ++i) {
       if (args[i].find("--config:") != std::string::npos)
