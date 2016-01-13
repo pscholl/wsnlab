@@ -6,6 +6,13 @@
                     |___/|_|                                        |___/                   |___/       
 
 
+Platypus_v1_0_Proto_v12_0   
+Change Log:
+- Used v10 as basis
+- Added MCP73831 (Battery Management)
+- using pins of I2C6 instead of I2C1 now because MCU cant use I2C1
+
+
 Platypus_v1_0_Proto_v11_0                                                                                              
 Change Log:
 - Replaced the TSL2584TSV by a new and relativly larger TSL25723FN, thus no more Soldering Problems(hopefully!)

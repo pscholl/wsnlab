@@ -2915,6 +2915,65 @@ Source:
 </deviceset>
 </devicesets>
 </library>
+<library name="TSL2584TSV">
+<packages>
+<package name="6-XFBGA">
+<smd name="P$1" x="-0.25" y="0.5" dx="0.226" dy="0.226" layer="1" roundness="100"/>
+<smd name="P$2" x="-0.25" y="0" dx="0.226" dy="0.226" layer="1" roundness="100"/>
+<smd name="P$3" x="-0.25" y="-0.5" dx="0.226" dy="0.226" layer="1" roundness="100"/>
+<smd name="P$4" x="0.25" y="-0.5" dx="0.226" dy="0.226" layer="1" roundness="100"/>
+<smd name="P$5" x="0.25" y="0" dx="0.226" dy="0.226" layer="1" roundness="100"/>
+<smd name="P$6" x="0.25" y="0.5" dx="0.226" dy="0.226" layer="1" roundness="100"/>
+<wire x1="-0.5" y1="-0.75" x2="0.5" y2="-0.75" width="0.05" layer="21"/>
+<wire x1="0.5" y1="-0.75" x2="0.5" y2="0.75" width="0.05" layer="21"/>
+<wire x1="0.5" y1="0.75" x2="-0.375" y2="0.75" width="0.05" layer="21"/>
+<wire x1="-0.375" y1="0.75" x2="-0.5" y2="0.75" width="0.05" layer="21"/>
+<wire x1="-0.5" y1="0.75" x2="-0.5" y2="0.625" width="0.05" layer="21"/>
+<wire x1="-0.5" y1="0.625" x2="-0.5" y2="-0.75" width="0.05" layer="21"/>
+<wire x1="-0.5" y1="0.625" x2="-0.375" y2="0.625" width="0.05" layer="21"/>
+<wire x1="-0.375" y1="0.625" x2="-0.375" y2="0.75" width="0.05" layer="21"/>
+<text x="-0.625" y="0.875" size="0.254" layer="25">&gt;NAME</text>
+</package>
+</packages>
+<symbols>
+<symbol name="TSL2584TSV">
+<pin name="VDD" x="-12.7" y="5.08" length="middle"/>
+<pin name="ADSL" x="-12.7" y="0" length="middle"/>
+<pin name="GND" x="-12.7" y="-5.08" length="middle"/>
+<pin name="SCL" x="12.7" y="-5.08" length="middle" rot="R180"/>
+<pin name="INT" x="12.7" y="0" length="middle" rot="R180"/>
+<pin name="SDA" x="12.7" y="5.08" length="middle" rot="R180"/>
+<wire x1="-7.62" y1="7.62" x2="7.62" y2="7.62" width="0.254" layer="94"/>
+<wire x1="7.62" y1="7.62" x2="7.62" y2="-7.62" width="0.254" layer="94"/>
+<wire x1="7.62" y1="-7.62" x2="-7.62" y2="-7.62" width="0.254" layer="94"/>
+<wire x1="-7.62" y1="-7.62" x2="-7.62" y2="7.62" width="0.254" layer="94"/>
+<text x="-7.62" y="10.16" size="1.778" layer="95">&gt;NAME</text>
+<text x="-7.62" y="-10.16" size="1.778" layer="96">&gt;VALUE</text>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="TSL2584TSV">
+<gates>
+<gate name="G$1" symbol="TSL2584TSV" x="0" y="0"/>
+</gates>
+<devices>
+<device name="6-XFBGA" package="6-XFBGA">
+<connects>
+<connect gate="G$1" pin="ADSL" pad="P$2"/>
+<connect gate="G$1" pin="GND" pad="P$3"/>
+<connect gate="G$1" pin="INT" pad="P$5"/>
+<connect gate="G$1" pin="SCL" pad="P$4"/>
+<connect gate="G$1" pin="SDA" pad="P$6"/>
+<connect gate="G$1" pin="VDD" pad="P$1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 <library name="BME280">
 <packages>
 <package name="LGA-8">
@@ -3036,63 +3095,6 @@ Source:
 </deviceset>
 </devicesets>
 </library>
-<library name="TSL25723FN">
-<packages>
-<package name="FN-6PIN">
-<smd name="P$1" x="0" y="0" dx="1.2" dy="0.35" layer="1"/>
-<smd name="P$2" x="0" y="-0.65" dx="1.2" dy="0.35" layer="1" roundness="100"/>
-<smd name="P$3" x="0" y="-1.3" dx="1.2" dy="0.35" layer="1" roundness="100"/>
-<smd name="P$4" x="1.5" y="-1.3" dx="1.2" dy="0.35" layer="1" roundness="100"/>
-<smd name="P$5" x="1.5" y="-0.65" dx="1.2" dy="0.35" layer="1" roundness="100"/>
-<smd name="P$6" x="1.5" y="0" dx="1.2" dy="0.35" layer="1" roundness="100"/>
-<wire x1="-0.25" y1="0.35" x2="-0.25" y2="-1.65" width="0" layer="21"/>
-<wire x1="-0.25" y1="0.35" x2="1.75" y2="0.35" width="0" layer="21"/>
-<wire x1="1.75" y1="0.35" x2="1.75" y2="-1.65" width="0" layer="21"/>
-<wire x1="1.75" y1="-1.65" x2="-0.25" y2="-1.65" width="0" layer="21"/>
-<wire x1="0.5" y1="-0.7" x2="1" y2="-0.7" width="0" layer="21"/>
-<wire x1="1" y1="-0.7" x2="1" y2="-0.25" width="0" layer="21"/>
-<wire x1="1" y1="-0.25" x2="0.5" y2="-0.25" width="0" layer="21"/>
-<wire x1="0.5" y1="-0.25" x2="0.5" y2="-0.7" width="0" layer="21"/>
-</package>
-</packages>
-<symbols>
-<symbol name="TSL25723FN">
-<pin name="VDD" x="-10.16" y="5.08" length="middle" direction="pwr"/>
-<pin name="SCL" x="-10.16" y="0" length="middle" direction="in"/>
-<pin name="GND" x="-10.16" y="-5.08" length="middle" direction="pwr"/>
-<pin name="NC" x="15.24" y="-5.08" length="middle" direction="nc" rot="R180"/>
-<pin name="INT" x="15.24" y="0" length="middle" direction="out" rot="R180"/>
-<pin name="SDA" x="15.24" y="5.08" length="middle" rot="R180"/>
-<wire x1="-5.08" y1="7.62" x2="10.16" y2="7.62" width="0.254" layer="94"/>
-<wire x1="10.16" y1="7.62" x2="10.16" y2="-7.62" width="0.254" layer="94"/>
-<wire x1="10.16" y1="-7.62" x2="-5.08" y2="-7.62" width="0.254" layer="94"/>
-<wire x1="-5.08" y1="-7.62" x2="-5.08" y2="7.62" width="0.254" layer="94"/>
-<text x="-5.08" y="-10.16" size="1.778" layer="94">&gt;NAME</text>
-</symbol>
-</symbols>
-<devicesets>
-<deviceset name="TSL25723FN">
-<gates>
-<gate name="G$1" symbol="TSL25723FN" x="-2.54" y="0"/>
-</gates>
-<devices>
-<device name="FN-6PIN" package="FN-6PIN">
-<connects>
-<connect gate="G$1" pin="GND" pad="P$3"/>
-<connect gate="G$1" pin="INT" pad="P$5"/>
-<connect gate="G$1" pin="NC" pad="P$4"/>
-<connect gate="G$1" pin="SCL" pad="P$2"/>
-<connect gate="G$1" pin="SDA" pad="P$6"/>
-<connect gate="G$1" pin="VDD" pad="P$1"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
-</devicesets>
-</library>
 </libraries>
 <attributes>
 </attributes>
@@ -3108,7 +3110,7 @@ Source:
 <part name="C4" library="Discrete" deviceset="C*" device="-0603" value="10nF"/>
 <part name="C1" library="Discrete" deviceset="C*" device="-0603" value="0.1µF"/>
 <part name="C2" library="Discrete" deviceset="C*" device="-0603" value="100nF"/>
-<part name="R3" library="Discrete" deviceset="R*" device="-0603" value="4.7k"/>
+<part name="R3" library="Discrete" deviceset="R*" device="-0603" value="10k"/>
 <part name="FRAME1" library="SparkFun-Aesthetics" deviceset="FRAME-A4L" device=""/>
 <part name="R1" library="Discrete" deviceset="R*" device="-0603" value="10k"/>
 <part name="U2" library="adafruit" deviceset="TXB0108PWR" device="" value="TXS0108E"/>
@@ -3143,6 +3145,7 @@ Source:
 <part name="X" library="con-hirose" deviceset="FH12-10S-0.5S" device="H" value="SHARP96"/>
 <part name="C8" library="Discrete" deviceset="C*" device="-0603" value="1µF"/>
 <part name="IC1" library="invensense" deviceset="MPU-9250" device=""/>
+<part name="U$1" library="TSL2584TSV" deviceset="TSL2584TSV" device="6-XFBGA"/>
 <part name="GND" library="supply1" deviceset="GND" device=""/>
 <part name="+3V2" library="supply1" deviceset="+3V3" device=""/>
 <part name="INT_J3" library="jumper" deviceset="SJ" device=""/>
@@ -3161,7 +3164,6 @@ Source:
 <part name="GND4" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
 <part name="X2" library="con-molex" deviceset="53?-04" device="047" value="Power TP"/>
 <part name="X1" library="con-molex" deviceset="53?-04" device="047" value="Power TP"/>
-<part name="U$4" library="TSL25723FN" deviceset="TSL25723FN" device="FN-6PIN"/>
 </parts>
 <sheets>
 <sheet>
@@ -3180,7 +3182,7 @@ Leave DCIN un connected if using Battery.</text>
 <text x="-237.236" y="162.052" size="1.778" layer="91">SCS</text>
 <text x="-237.236" y="159.512" size="1.778" layer="91">SI</text>
 <text x="-236.474" y="156.972" size="1.778" layer="91">SCLK</text>
-<text x="-218.44" y="299.72" size="1.778" layer="104">Battery Connector</text>
+<text x="-185.42" y="302.26" size="1.778" layer="104">Battery Connector</text>
 </plain>
 <instances>
 <instance part="J1" gate="G$1" x="-408.94" y="241.3"/>
@@ -3280,8 +3282,9 @@ Leave DCIN un connected if using Battery.</text>
 <attribute name="VALUE" x="-252.8824" y="172.593" size="1.27" layer="96" rot="R180"/>
 </instance>
 <instance part="IC1" gate="G$1" x="-260.096" y="270.002"/>
-<instance part="GND" gate="1" x="-312.42" y="213.36"/>
-<instance part="+3V2" gate="G$1" x="-314.96" y="231.14"/>
+<instance part="U$1" gate="G$1" x="-309.88" y="214.63"/>
+<instance part="GND" gate="1" x="-328.138" y="206.138"/>
+<instance part="+3V2" gate="G$1" x="-327.914" y="224.028"/>
 <instance part="INT_J3" gate="1" x="-196.342" y="234.442"/>
 <instance part="U$2" gate="G$1" x="-317.5" y="284.48"/>
 <instance part="C3" gate="C" x="-299.72" y="273.05" smashed="yes" rot="MR90">
@@ -3299,18 +3302,18 @@ Leave DCIN un connected if using Battery.</text>
 <attribute name="VALUE" x="-341.63" y="283.21" size="1.27" layer="96" ratio="10" rot="R90"/>
 </instance>
 <instance part="1.8V7" gate="VCC" x="-337.82" y="297.18"/>
-<instance part="R12" gate="R" x="-274.32" y="223.52" smashed="yes">
-<attribute name="NAME" x="-272.76" y="223.934" size="1.27" layer="95" ratio="10"/>
-<attribute name="VALUE" x="-272.86" y="221.66" size="1.27" layer="96" ratio="10"/>
+<instance part="R12" gate="R" x="-279.4" y="217.424" smashed="yes">
+<attribute name="NAME" x="-277.84" y="217.838" size="1.27" layer="95" ratio="10"/>
+<attribute name="VALUE" x="-277.94" y="215.564" size="1.27" layer="96" ratio="10"/>
 </instance>
-<instance part="1.8" gate="VCC" x="-261.62" y="228.6" rot="MR0"/>
-<instance part="C7" gate="C" x="-312.42" y="220.98" smashed="yes" rot="R90">
-<attribute name="NAME" x="-313.69" y="217.932" size="1.27" layer="95" rot="R90"/>
-<attribute name="VALUE" x="-313.944" y="221.234" size="1.27" layer="96" rot="R90"/>
+<instance part="1.8" gate="VCC" x="-270.256" y="225.044" rot="MR0"/>
+<instance part="C7" gate="C" x="-325.374" y="214.63" smashed="yes" rot="R90">
+<attribute name="NAME" x="-325.882" y="211.074" size="1.27" layer="95" rot="R90"/>
+<attribute name="VALUE" x="-326.898" y="214.884" size="1.27" layer="96" rot="R90"/>
 </instance>
-<instance part="U$3" gate="G$1" x="-193.04" y="279.4" rot="R90"/>
-<instance part="VSYS3" gate="G$1" x="-190.5" y="298.958"/>
-<instance part="GND4" gate="1" x="-190.5" y="274.32"/>
+<instance part="U$3" gate="G$1" x="-187.96" y="297.18" rot="R270"/>
+<instance part="VSYS3" gate="G$1" x="-193.04" y="304.038"/>
+<instance part="GND4" gate="1" x="-193.04" y="279.4"/>
 <instance part="X2" gate="-1" x="-185.42" y="187.96"/>
 <instance part="X2" gate="-2" x="-185.42" y="185.42"/>
 <instance part="X2" gate="-3" x="-185.42" y="182.88"/>
@@ -3319,7 +3322,6 @@ Leave DCIN un connected if using Battery.</text>
 <instance part="X1" gate="-2" x="-182.88" y="264.16"/>
 <instance part="X1" gate="-3" x="-182.88" y="261.62"/>
 <instance part="X1" gate="-4" x="-182.88" y="259.08"/>
-<instance part="U$4" gate="G$1" x="-299.72" y="220.98"/>
 </instances>
 <busses>
 </busses>
@@ -3434,6 +3436,20 @@ Leave DCIN un connected if using Battery.</text>
 <junction x="-246.634" y="178.308"/>
 </segment>
 <segment>
+<pinref part="U$1" gate="G$1" pin="GND"/>
+<pinref part="GND" gate="1" pin="GND"/>
+<wire x1="-322.58" y1="209.55" x2="-325.374" y2="209.55" width="0.1524" layer="91"/>
+<wire x1="-325.374" y1="209.55" x2="-328.168" y2="209.55" width="0.1524" layer="91"/>
+<wire x1="-328.168" y1="209.55" x2="-328.138" y2="208.678" width="0.1524" layer="91"/>
+<pinref part="U$1" gate="G$1" pin="ADSL"/>
+<wire x1="-322.58" y1="214.63" x2="-328.168" y2="214.63" width="0.1524" layer="91"/>
+<wire x1="-328.168" y1="214.63" x2="-328.168" y2="209.55" width="0.1524" layer="91"/>
+<junction x="-328.168" y="209.55"/>
+<pinref part="C7" gate="C" pin="1"/>
+<wire x1="-325.374" y1="210.82" x2="-325.374" y2="209.55" width="0.1524" layer="91"/>
+<junction x="-325.374" y="209.55"/>
+</segment>
+<segment>
 <pinref part="U$2" gate="G$1" pin="GND2"/>
 <wire x1="-302.26" y1="287.02" x2="-304.8" y2="287.02" width="0.1524" layer="91"/>
 <wire x1="-317.5" y1="269.24" x2="-302.26" y2="269.24" width="0.1524" layer="91"/>
@@ -3450,26 +3466,17 @@ Leave DCIN un connected if using Battery.</text>
 </segment>
 <segment>
 <pinref part="GND4" gate="1" pin="GND"/>
-<wire x1="-190.5" y1="276.86" x2="-190.5" y2="279.4" width="0.1524" layer="91"/>
-<pinref part="U$3" gate="G$1" pin="P$2"/>
-<pinref part="U$3" gate="G$1" pin="P$1"/>
-<wire x1="-193.04" y1="281.94" x2="-193.04" y2="279.4" width="0.1524" layer="91"/>
-<wire x1="-193.04" y1="279.4" x2="-190.5" y2="279.4" width="0.1524" layer="91"/>
-<junction x="-193.04" y="279.4"/>
+<wire x1="-193.04" y1="281.94" x2="-193.04" y2="284.48" width="0.1524" layer="91"/>
+<pinref part="U$3" gate="G$1" pin="P$5"/>
+<pinref part="U$3" gate="G$1" pin="P$6"/>
+<wire x1="-187.96" y1="287.02" x2="-187.96" y2="284.48" width="0.1524" layer="91"/>
+<wire x1="-193.04" y1="284.48" x2="-187.96" y2="284.48" width="0.1524" layer="91"/>
+<junction x="-187.96" y="284.48"/>
 </segment>
 <segment>
 <pinref part="X2" gate="-4" pin="S"/>
 <wire x1="-187.96" y1="180.34" x2="-210.82" y2="180.34" width="0.1524" layer="91"/>
 <label x="-203.2" y="180.34" size="1.778" layer="95"/>
-</segment>
-<segment>
-<pinref part="U$4" gate="G$1" pin="GND"/>
-<pinref part="GND" gate="1" pin="GND"/>
-<wire x1="-312.42" y1="218.44" x2="-312.42" y2="217.17" width="0.1524" layer="91"/>
-<pinref part="C7" gate="C" pin="1"/>
-<wire x1="-309.88" y1="215.9" x2="-312.42" y2="215.9" width="0.1524" layer="91"/>
-<wire x1="-312.42" y1="217.17" x2="-312.42" y2="215.9" width="0.1524" layer="91"/>
-<junction x="-312.42" y="215.9"/>
 </segment>
 </net>
 <net name="VSYS" class="0">
@@ -3501,15 +3508,15 @@ Leave DCIN un connected if using Battery.</text>
 <pinref part="VSYS2" gate="G$1" pin="VDD"/>
 </segment>
 <segment>
-<wire x1="-190.5" y1="294.64" x2="-190.5" y2="296.418" width="0.1524" layer="91"/>
-<wire x1="-190.5" y1="296.418" x2="-190.5" y2="292.1" width="0.1524" layer="91"/>
+<wire x1="-193.04" y1="299.72" x2="-193.04" y2="301.498" width="0.1524" layer="91"/>
+<pinref part="U$3" gate="G$1" pin="P$1"/>
+<wire x1="-193.04" y1="301.498" x2="-193.04" y2="297.18" width="0.1524" layer="91"/>
+<wire x1="-193.04" y1="297.18" x2="-187.96" y2="297.18" width="0.1524" layer="91"/>
+<pinref part="U$3" gate="G$1" pin="P$2"/>
+<wire x1="-187.96" y1="297.18" x2="-187.96" y2="294.64" width="0.1524" layer="91"/>
+<junction x="-187.96" y="297.18"/>
 <pinref part="VSYS3" gate="G$1" pin="VDD"/>
-<junction x="-190.5" y="296.418"/>
-<pinref part="U$3" gate="G$1" pin="P$6"/>
-<pinref part="U$3" gate="G$1" pin="P$5"/>
-<wire x1="-193.04" y1="292.1" x2="-193.04" y2="289.56" width="0.1524" layer="91"/>
-<wire x1="-193.04" y1="292.1" x2="-190.5" y2="292.1" width="0.1524" layer="91"/>
-<junction x="-193.04" y="292.1"/>
+<junction x="-193.04" y="301.498"/>
 </segment>
 <segment>
 <pinref part="X2" gate="-1" pin="S"/>
@@ -3566,20 +3573,19 @@ Leave DCIN un connected if using Battery.</text>
 <wire x1="-249.1232" y1="175.7172" x2="-246.5832" y2="175.7172" width="0.1524" layer="91"/>
 </segment>
 <segment>
+<pinref part="+3V2" gate="G$1" pin="+3V3"/>
+<pinref part="U$1" gate="G$1" pin="VDD"/>
+<wire x1="-327.914" y1="221.488" x2="-327.914" y2="219.71" width="0.1524" layer="91"/>
+<wire x1="-327.914" y1="219.71" x2="-325.374" y2="219.71" width="0.1524" layer="91"/>
+<pinref part="C7" gate="C" pin="2"/>
+<wire x1="-325.374" y1="219.71" x2="-322.58" y2="219.71" width="0.1524" layer="91"/>
+<wire x1="-325.374" y1="218.44" x2="-325.374" y2="219.71" width="0.1524" layer="91"/>
+<junction x="-325.374" y="219.71"/>
+</segment>
+<segment>
 <pinref part="X2" gate="-2" pin="S"/>
 <wire x1="-187.96" y1="185.42" x2="-210.82" y2="185.42" width="0.1524" layer="91"/>
 <label x="-203.2" y="185.42" size="1.778" layer="95"/>
-</segment>
-<segment>
-<pinref part="+3V2" gate="G$1" pin="+3V3"/>
-<wire x1="-314.96" y1="226.06" x2="-314.96" y2="228.6" width="0.1524" layer="91"/>
-<wire x1="-309.88" y1="226.06" x2="-312.42" y2="226.06" width="0.1524" layer="91"/>
-<wire x1="-312.42" y1="226.06" x2="-314.96" y2="226.06" width="0.1524" layer="91"/>
-<pinref part="U$4" gate="G$1" pin="VDD"/>
-<wire x1="-312.42" y1="224.79" x2="-312.42" y2="223.52" width="0.1524" layer="91"/>
-<pinref part="C7" gate="C" pin="2"/>
-<wire x1="-312.42" y1="226.06" x2="-312.42" y2="224.79" width="0.1524" layer="91"/>
-<junction x="-312.42" y="226.06"/>
 </segment>
 </net>
 <net name="GP183_PWM3" class="0">
@@ -3859,9 +3865,9 @@ Leave DCIN un connected if using Battery.</text>
 <label x="-208.534" y="218.186" size="1.778" layer="95"/>
 </segment>
 <segment>
-<label x="-287.02" y="228.6" size="1.778" layer="95"/>
-<pinref part="U$4" gate="G$1" pin="SDA"/>
-<wire x1="-284.48" y1="226.06" x2="-269.24" y2="226.06" width="0.1524" layer="91"/>
+<pinref part="U$1" gate="G$1" pin="SDA"/>
+<wire x1="-297.18" y1="219.71" x2="-273.304" y2="219.71" width="0.1524" layer="91"/>
+<label x="-294.864" y="220.87" size="1.778" layer="95"/>
 </segment>
 <segment>
 <label x="-233.172" y="283.21" size="1.27" layer="95" ratio="10"/>
@@ -3882,9 +3888,9 @@ Leave DCIN un connected if using Battery.</text>
 <label x="-208.534" y="215.392" size="1.778" layer="95"/>
 </segment>
 <segment>
-<label x="-337.79" y="218.33" size="1.778" layer="95"/>
-<pinref part="U$4" gate="G$1" pin="SCL"/>
-<wire x1="-309.88" y1="220.98" x2="-325.12" y2="220.98" width="0.1524" layer="91"/>
+<pinref part="U$1" gate="G$1" pin="SCL"/>
+<wire x1="-297.18" y1="209.55" x2="-273.05" y2="209.55" width="0.1524" layer="91"/>
+<label x="-294.61" y="210.71" size="1.778" layer="95"/>
 </segment>
 <segment>
 <label x="-233.172" y="278.13" size="1.27" layer="95" ratio="10"/>
@@ -4105,17 +4111,15 @@ Leave DCIN un connected if using Battery.</text>
 <junction x="-340.36" y="287.02"/>
 </segment>
 <segment>
+<pinref part="R12" gate="R" pin="2"/>
+<pinref part="1.8" gate="VCC" pin="VCC"/>
+<wire x1="-275.59" y1="217.424" x2="-270.256" y2="217.424" width="0.1524" layer="91"/>
+<wire x1="-270.256" y1="217.424" x2="-270.256" y2="222.504" width="0.1524" layer="91"/>
+</segment>
+<segment>
 <pinref part="X2" gate="-3" pin="S"/>
 <wire x1="-187.96" y1="182.88" x2="-210.82" y2="182.88" width="0.1524" layer="91"/>
 <label x="-203.2" y="182.88" size="1.778" layer="95"/>
-</segment>
-<segment>
-<pinref part="1.8" gate="VCC" pin="VCC"/>
-<wire x1="-261.62" y1="226.06" x2="-261.62" y2="223.52" width="0.1524" layer="91"/>
-<wire x1="-261.62" y1="223.52" x2="-270.51" y2="223.52" width="0.1524" layer="91"/>
-<pinref part="R12" gate="R" pin="2"/>
-<wire x1="-270.51" y1="223.52" x2="-271.78" y2="223.52" width="0.1524" layer="91"/>
-<junction x="-270.51" y="223.52"/>
 </segment>
 </net>
 <net name="FW_RCVR" class="0">
@@ -4268,21 +4272,18 @@ Leave DCIN un connected if using Battery.</text>
 </net>
 <net name="ALS_INT" class="0">
 <segment>
+<pinref part="U$1" gate="G$1" pin="INT"/>
+<wire x1="-297.18" y1="214.63" x2="-283.21" y2="214.63" width="0.1524" layer="91"/>
+<label x="-294.61" y="215.536" size="1.778" layer="95"/>
+<pinref part="R12" gate="R" pin="1"/>
+<wire x1="-283.21" y1="214.63" x2="-273.05" y2="214.63" width="0.1524" layer="91"/>
+<wire x1="-283.21" y1="217.424" x2="-283.21" y2="214.63" width="0.1524" layer="91"/>
+<junction x="-283.21" y="214.63"/>
+</segment>
+<segment>
 <pinref part="INT_J3" gate="1" pin="1"/>
 <wire x1="-201.422" y1="234.442" x2="-204.216" y2="234.442" width="0.1524" layer="91"/>
 <label x="-204.216" y="236.22" size="1.778" layer="95" rot="R180"/>
-</segment>
-<segment>
-<pinref part="U$4" gate="G$1" pin="INT"/>
-<wire x1="-284.48" y1="220.98" x2="-279.4" y2="220.98" width="0.1524" layer="91"/>
-<wire x1="-279.4" y1="220.98" x2="-279.4" y2="223.52" width="0.1524" layer="91"/>
-<wire x1="-279.4" y1="223.52" x2="-278.13" y2="223.52" width="0.1524" layer="91"/>
-<wire x1="-278.13" y1="223.52" x2="-276.86" y2="223.52" width="0.1524" layer="91"/>
-<wire x1="-279.4" y1="220.98" x2="-261.62" y2="220.98" width="0.1524" layer="91"/>
-<junction x="-279.4" y="220.98"/>
-<pinref part="R12" gate="R" pin="1"/>
-<junction x="-278.13" y="223.52"/>
-<label x="-271.78" y="218.44" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="AUX_DA" class="0">
@@ -4328,9 +4329,9 @@ Leave DCIN un connected if using Battery.</text>
 </net>
 <net name="N$9" class="0">
 <segment>
-<pinref part="U$3" gate="G$1" pin="P$4"/>
 <pinref part="U$3" gate="G$1" pin="P$3"/>
-<wire x1="-193.04" y1="287.02" x2="-193.04" y2="284.48" width="0.1524" layer="91"/>
+<pinref part="U$3" gate="G$1" pin="P$4"/>
+<wire x1="-187.96" y1="292.1" x2="-187.96" y2="289.56" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
