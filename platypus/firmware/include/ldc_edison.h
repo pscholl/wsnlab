@@ -36,7 +36,7 @@
 
 class ldc_edison {
  public:
-  ldc_edison(uint8_t i2c_addr = LDC_I2C_ADDRESS);
+  ldc_edison(int i2c_bus = 1, uint8_t i2c_addr = LDC_I2C_ADDRESS);
   ~ldc_edison();
 
   // set the I2C address of the device

@@ -38,7 +38,7 @@
 
 class batgauge_edison {
  public:
-  batgauge_edison();
+  batgauge_edison(int i2c_bus = 1);
   ~batgauge_edison();
 
   void reset();

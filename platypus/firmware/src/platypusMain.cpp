@@ -21,7 +21,8 @@ imu_edison* m_imu;
 // default config
 int m_i2c_bus = 1;
 uint8_t m_mpu_address = 0x68;
-uint8_t m_dsp_hands   = 3;
+uint8_t m_dsp_resolution = 128;
+uint8_t m_dsp_hands = 3;
 int m_log_level = 1;
 int m_alert_threshold = 4;
 
@@ -96,7 +97,8 @@ void parseConfig(std::string path) {
   // store configs
   m_i2c_bus = (int) std::stoi(cfg["i2c_bus"]);
   m_mpu_address = (uint8_t) std::stoi(cfg["mpu_address"]);
-  m_dsp_hands   = (uint8_t) std::stoi(cfg["dsp_hands"]);
+  m_dsp_resolution = (uint8_t) std::stoi(cfg["dsp_resolution"]);
+  m_dsp_hands = (uint8_t) std::stoi(cfg["dsp_hands"]);
   m_log_level = std::stoi(cfg["log_level"]);
   m_alert_threshold = std::stoi(cfg["alert_threshold"]);
   m_start_imu = stob(cfg["start_imu"], m_start_imu);
@@ -139,7 +141,7 @@ int main(int argc, char** argv) {
   last_int = Clock::now();
 
   if (argc == 1)
-    parseConfig("config.cfg");
+    parseConfig("./platypus.conf");
   else
     parseConfig(argv[1]);
 
@@ -154,12 +156,12 @@ int main(int argc, char** argv) {
     imu_interrupt->mode(mraa::MODE_HIZ);
   }
   if (m_start_ldc) {
-    m_pps->ldc_init();
+    m_pps->ldc_init(m_i2c_bus);
   }
 
   // Set up display
   if (m_start_dsp)
-    m_pps->display_init(m_dsp_hands);
+    m_pps->display_init(m_dsp_resolution, m_dsp_hands);
 
   // Start MCU
   if (m_start_mcu)
@@ -167,7 +169,7 @@ int main(int argc, char** argv) {
 
   // Start battery gauge
   if (m_start_bat) {
-    m_bat = m_pps->bat_init();
+    m_bat = m_pps->bat_init(m_i2c_bus);
     m_bat->setAlertThreshold(m_alert_threshold);
   }
 

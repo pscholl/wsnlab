@@ -76,11 +76,11 @@ class platypus {
   ~platypus();
 
   // init
-  void display_init(uint8_t clk_hands);
+  void display_init(uint8_t res, uint8_t clk_hands);
   imu_edison* imu_init(int i2c_bus, uint8_t i2c_addr, bool env_init);
   void mcu_init();
-  void ldc_init();
-  batgauge_edison* bat_init();
+  void ldc_init(int i2c_bus);
+  batgauge_edison* bat_init(int i2c_bus);
 
   // threading
   void spawn_threads();
@@ -129,6 +129,8 @@ class platypus {
 
   // print the menu strings with pointer at given entry
   void printMenu(int pos);
+  // print the remaining time until menu activation
+  void printTimer(int sec);
 
   //________________________________________________________________________________
   display_edison* m_dsp;

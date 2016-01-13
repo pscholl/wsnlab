@@ -40,8 +40,8 @@ platypus::~platypus() {
  */
 
 //_______________________________________________________________________________________________________
-void platypus::display_init(uint8_t clk_hands) {
-  m_dsp = new display_edison(clk_hands);
+void platypus::display_init(uint8_t res, uint8_t clk_hands) {
+  m_dsp = new display_edison(res, clk_hands);
   m_dsp_init = true;
 }
 
@@ -65,14 +65,14 @@ void platypus::mcu_init() {
 }
 
 //_______________________________________________________________________________________________________
-void platypus::ldc_init() {
-  m_ldc = new ldc_edison;
+void platypus::ldc_init(int i2c_bus) {
+  m_ldc = new ldc_edison(i2c_bus);
   m_ldc_init = true;
 }
 
 //_______________________________________________________________________________________________________
-batgauge_edison* platypus::bat_init() {
-  m_bat = new batgauge_edison;
+batgauge_edison* platypus::bat_init(int i2c_bus) {
+  m_bat = new batgauge_edison(i2c_bus);
   m_bat_init = true;
   return m_bat;
 }
@@ -135,8 +135,9 @@ void platypus::t_display() {
         if (prev_dsp != m_dsp_state) {
           sec_counter = 0;
           m_dsp->clear();
-          m_dsp->print("WELCOME TO", 64, 60, true);
-          m_dsp->print("PLATYPUS", 64, 70, true);
+          int res = m_dsp->resolution();
+          m_dsp->print("WELCOME TO", res/2, res/2-5, true);
+          m_dsp->print("PLATYPUS", res/2, res/2+5, true);
           m_dsp->flush();
         } else if (sec_counter < 5) {
           ++sec_counter;
@@ -186,7 +187,7 @@ void platypus::t_display() {
           m_dsp->flush();
         } else if (sec_counter < MENU_TIME) {
           printMenu(1);
-          m_dsp->print(MENU_TIME - sec_counter, 64, 100, true);
+          printTimer(sec_counter);
           m_dsp->flush();
           ++sec_counter;
         } else {
@@ -204,7 +205,7 @@ void platypus::t_display() {
           m_dsp->flush();
         } else if (sec_counter < MENU_TIME) {
           printMenu(2);
-          m_dsp->print(MENU_TIME - sec_counter, 64, 100, true);
+          printTimer(sec_counter);
           m_dsp->flush();
           ++sec_counter;
         } else {
@@ -229,7 +230,7 @@ void platypus::t_display() {
           m_dsp->flush();
         } else if (sec_counter < MENU_TIME) {
           printMenu(3);
-          m_dsp->print(MENU_TIME - sec_counter, 64, 100, true);
+          printTimer(sec_counter);
           m_dsp->flush();
           ++sec_counter;
         } else {
@@ -254,7 +255,7 @@ void platypus::t_display() {
           m_dsp->flush();
         } else if (sec_counter < MENU_TIME) {
           printMenu(4);
-          m_dsp->print(MENU_TIME - sec_counter, 64, 100, true);
+          printTimer(sec_counter);
           m_dsp->flush();
           ++sec_counter;
         } else {
@@ -273,7 +274,7 @@ void platypus::t_display() {
           m_dsp->flush();
         } else if (sec_counter < MENU_TIME) {
           printMenu(5);
-          m_dsp->print(MENU_TIME - sec_counter, 64, 100, true);
+          printTimer(sec_counter);
           m_dsp->flush();
           ++sec_counter;
         } else {
@@ -291,7 +292,7 @@ void platypus::t_display() {
           m_dsp->flush();
         } else if (sec_counter < MENU_TIME) {
           printMenu(6);
-          m_dsp->print(MENU_TIME - sec_counter, 64, 100, true);
+          printTimer(sec_counter);
           m_dsp->flush();
           ++sec_counter;
         } else {
@@ -315,8 +316,6 @@ void platypus::t_display() {
           m_dsp->print(data[5], 15, 75, 2);
           m_dsp->print("Temp [degC]:", 5, 85);
           m_dsp->print(data[6], 15, 95, 2);
-          m_dsp->print("RAM [Bytes]:", 5, 105);
-          m_dsp->print((int)m_data_memory[m_data_idx].size(), 15, 115);
           m_dsp->flush();
           break;
         }
@@ -667,12 +666,27 @@ void platypus::writeDataToFlash(std::vector<uint8_t> &data) {
 
 //_______________________________________________________________________________________________________
 DisplayStates platypus::tap_event() {
-  std::vector<float> curr_imu = m_imu->toReadable(m_imu_data);
-  if (curr_imu[0] > 1 || curr_imu[0] < -1)
+  std::vector<float> imu_data = m_imu->toReadable(m_imu_data);
+  std::vector<float> imu_curr = m_imu->toReadable(m_imu->readRawIMU());
+  //printf("%f, %f, %f | %f, %f, %f\n", imu_data[0], imu_data[1], imu_data[2], imu_curr[3], imu_curr[4], imu_curr[5]);
+  //fflush(stdout);
+
+  // try to filter taps more or less accurately
+
+  // platypus board needs to be level (parallel to ground)
+  if (imu_data[0] > 1 || imu_data[0] < -1)
     return DisplayStates::NOCHANGE;
-  if (curr_imu[1] > 1 || curr_imu[1] < -1)
+  if (imu_data[1] > 1 || imu_data[1] < -1)
     return DisplayStates::NOCHANGE;
-  if (curr_imu[2] < 9)
+  if (imu_data[2] < 8)
+    return DisplayStates::NOCHANGE;
+
+  // current gyro values need to be small
+  if (imu_curr[3] > 45 || imu_curr[3] < -45)
+    return DisplayStates::NOCHANGE;
+  if (imu_curr[4] > 45 || imu_curr[4] < -45)
+    return DisplayStates::NOCHANGE;
+  if (imu_curr[5] > 45 || imu_curr[5] < -45)
     return DisplayStates::NOCHANGE;
 
   switch (m_dsp_state) {
@@ -792,5 +806,10 @@ void platypus::printMenu(int pos) {
   m_dsp->print("  Display Stats", 5, 45);
   m_dsp->print("  Display Config", 5, 55);
   m_dsp->print(">", 5, 5 + (10 * (pos-1)));
+}
+
+//_______________________________________________________________________________________________________
+void platypus::printTimer(int sec) {
+  m_dsp->print(MENU_TIME - sec, m_dsp->resolution()/2, m_dsp->resolution()-10, true);
 }
 

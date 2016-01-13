@@ -9,8 +9,8 @@
 
 
 //_______________________________________________________________________________________________________
-batgauge_edison::batgauge_edison() {
-  m_i2c = new mraa::I2c(1);
+batgauge_edison::batgauge_edison(int i2c_bus) {
+  m_i2c = new mraa::I2c(i2c_bus);
   m_i2c->address(MAX17043_ADDRESS);
 
   reset();

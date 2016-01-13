@@ -2,7 +2,7 @@
 #include "./batgauge_edison.h"
 
 int main(int argc, char** argv) {
-  batgauge_edison bat;
+  batgauge_edison bat(1);
 
   printf("Battery Voltage: %f V\n", bat.getVCell());
 

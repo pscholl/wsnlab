@@ -30,7 +30,8 @@ batgauge_edison* m_bat;
 // default config
 int m_i2c_bus = 1;
 uint8_t m_mpu_address = 0x68;
-uint8_t m_dsp_hands   = 3;
+uint8_t m_dsp_resolution = 3;
+uint8_t m_dsp_hands = 3;
 int m_log_level = 1;
 int m_alert_threshold = 4;
 
@@ -100,7 +101,8 @@ void parseConfig(std::string path) {
   // store configs
   m_i2c_bus = (int) std::stoi(cfg["i2c_bus"]);
   m_mpu_address = (uint8_t) std::stoi(cfg["mpu_address"]);
-  m_dsp_hands   = (uint8_t) std::stoi(cfg["dsp_hands"]);
+  m_dsp_resolution = (uint8_t) std::stoi(cfg["dsp_resolution"]);
+  m_dsp_hands = (uint8_t) std::stoi(cfg["dsp_hands"]);
   m_log_level = std::stoi(cfg["log_level"]);
   m_alert_threshold = std::stoi(cfg["alert_threshold"]);
   m_start_imu = stob(cfg["start_imu"], m_start_imu);
@@ -127,7 +129,7 @@ void parseArgs(int argc, char** argv) {
   // --bat:[0/1]      | enable/disable BatGauge test
   //
   if (argc == 1) {
-    parseConfig("config.cfg");
+    parseConfig("./platypus.conf");
   } else {
     std::vector<std::string> args;
     args.assign(argv + 1, argv + argc);
@@ -139,14 +141,14 @@ void parseArgs(int argc, char** argv) {
         cfg_chg = true;
     }
     if (!cfg_chg)
-      parseConfig("config.cfg");
+      parseConfig("./platypus.conf");
 
     // parse arguments
     for (size_t i = 0; i < args.size(); ++i) {
       if (args[i] == "-h" || args[i] == "--help") {
         printf("Usage: %s <ARGS>\n", argv[0]);
         printf("\n");
-        printf("No arguments: use config file 'config.cfg' in current directory\n");
+        printf("No arguments: use config file './platypus.conf'\n");
         printf("\n");
         printf("arguments:\n");
         printf("\t -h --help\t| display help message\n");
@@ -270,7 +272,7 @@ int main(int argc, char** argv) {
 
   // Set up display
   if (m_start_dsp)
-    m_dsp = new display_edison(m_dsp_hands);
+    m_dsp = new display_edison(m_dsp_resolution, m_dsp_hands);
 
   // Set up IMU
   if (m_start_imu) {
@@ -280,11 +282,11 @@ int main(int argc, char** argv) {
 
   // Set up LDC
   if (m_start_ldc)
-    m_ldc = new ldc_edison;
+    m_ldc = new ldc_edison(m_i2c_bus);
 
   // Start battery gauge
   if (m_start_bat) {
-    m_bat = new batgauge_edison;
+    m_bat = new batgauge_edison(m_i2c_bus);
     m_bat->setAlertThreshold(m_alert_threshold);
   }
 

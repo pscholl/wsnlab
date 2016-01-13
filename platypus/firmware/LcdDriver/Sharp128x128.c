@@ -8,7 +8,7 @@
 
 //*****************************************************************************
 //
-// Sharp96x96.c
+// Sharp128x128.c
 //
 //*****************************************************************************
 //
@@ -18,7 +18,7 @@
 //*****************************************************************************
 
 #include "grlib.h"
-#include "Sharp96x96.h"
+#include "Sharp128x128.h"
 
 #include "LcdDriver.h"
 
@@ -26,12 +26,12 @@
 
 const uint8_t reverse_data[] = {0x0, 0x8, 0x4, 0xC, 0x2, 0xA, 0x6, 0xE, 0x1,
 		0x9, 0x5, 0xD, 0x3, 0xB, 0x7, 0xF};
-uint8_t VCOMbit96= 0x40;
-uint8_t flagSendToggleVCOMCommand96 = 0;
+uint8_t VCOMbit128= 0x40;
+uint8_t flagSendToggleVCOMCommand128 = 0;
 
 
-static void Sharp96x96_InitializeDisplayBuffer(void *pvDisplayData, uint8_t ucValue);
-static uint8_t Sharp96x96_reverse(uint8_t x);
+static void Sharp128x128_InitializeDisplayBuffer(void *pvDisplayData, uint8_t ucValue);
+static uint8_t Sharp128x128_reverse(uint8_t x);
 
 //*****************************************************************************
 //
@@ -49,12 +49,12 @@ static uint8_t Sharp96x96_reverse(uint8_t x);
 //#endif
 
 #ifndef NON_VOLATILE_MEMORY_BUFFER
-uint8_t DisplayBuffer96[LCD_VERTICAL_MAX_96][LCD_HORIZONTAL_MAX_96/8];
+uint8_t DisplayBuffer128[LCD_VERTICAL_MAX_128][LCD_HORIZONTAL_MAX_128/8];
 #else
 #ifdef __ICC430__
-__no_init uint8_t DisplayBuffer96[LCD_VERTICAL_MAX_96 +32][LCD_HORIZONTAL_MAX_96/8];
+__no_init uint8_t DisplayBuffer128[LCD_VERTICAL_MAX_128 +32][LCD_HORIZONTAL_MAX_128/8];
 #else
-uint8_t DisplayBuffer96[LCD_VERTICAL_MAX_96 +32][LCD_HORIZONTAL_MAX_96/8];
+uint8_t DisplayBuffer128[LCD_VERTICAL_MAX_128 +32][LCD_HORIZONTAL_MAX_128/8];
 #endif //__ICC430__
 #endif //NON_VOLATILE_MEMORY_BUFFER
 
@@ -62,13 +62,13 @@ uint8_t DisplayBuffer96[LCD_VERTICAL_MAX_96 +32][LCD_HORIZONTAL_MAX_96/8];
 //
 //! Initializes the display driver.
 //!
-//! This function initializes the Sharp96x96 display controller preparing it to
+//! This function initializes the Sharp128x128 display controller preparing it to
 //! display data.
 //!
 //! \return None.
 //
 //*****************************************************************************
-void Sharp96x96_initDisplay(void)
+void Sharp128x128_initDisplay(void)
 {
 	HAL_LCD_initDisplay();
 }
@@ -83,16 +83,16 @@ void Sharp96x96_initDisplay(void)
 //! \return None.
 //
 //*****************************************************************************
-void Sharp96x96_SendToggleVCOMCommand()
+void Sharp128x128_SendToggleVCOMCommand()
 {
-	VCOMbit96 ^= SHARP_VCOM_TOGGLE_BIT;
+	VCOMbit128 ^= SHARP_VCOM_TOGGLE_BIT;
 
-	if(SHARP_SEND_TOGGLE_VCOM_COMMAND == flagSendToggleVCOMCommand96)
+	if(SHARP_SEND_TOGGLE_VCOM_COMMAND == flagSendToggleVCOMCommand128)
 	{
 		//clear screen mode(0X100000b)
 		uint8_t command = SHARP_LCD_CMD_CHANGE_VCOM;
 		//COM inversion bit
-		command = command^VCOMbit96;
+		command = command^VCOMbit128;
 
 	    HAL_LCD_setCS();
 
@@ -109,16 +109,16 @@ void Sharp96x96_SendToggleVCOMCommand()
 		HAL_LCD_clearCS();
 	}
 
-	flagSendToggleVCOMCommand96 = SHARP_SEND_TOGGLE_VCOM_COMMAND;
+	flagSendToggleVCOMCommand128 = SHARP_SEND_TOGGLE_VCOM_COMMAND;
 }
 
 
-void Sharp96x96_disable(void)
+void Sharp128x128_disable(void)
 {
 	HAL_LCD_disableDisplay();
 }
 
-void Sharp96x96_enable(void)
+void Sharp128x128_enable(void)
 {
 	HAL_LCD_enableDisplay();
 
@@ -131,7 +131,7 @@ void Sharp96x96_enable(void)
 //! to maximize code execution
 //
 //*******************************************************************************
-static uint8_t Sharp96x96_reverse(uint8_t x)
+static uint8_t Sharp128x128_reverse(uint8_t x)
 {
   uint8_t b = 0;
 
@@ -154,7 +154,7 @@ static uint8_t Sharp96x96_reverse(uint8_t x)
 //! \return None.
 //
 //*****************************************************************************
-static void Sharp96x96_InitializeDisplayBuffer(void *pvDisplayData,
+static void Sharp128x128_InitializeDisplayBuffer(void *pvDisplayData,
 		uint8_t ucValue)
 {
 #ifdef NON_VOLATILE_MEMORY_BUFFER
@@ -169,8 +169,8 @@ static void Sharp96x96_InitializeDisplayBuffer(void *pvDisplayData,
 #else
   uint16_t i=0,j=0;
   uint8_t *pucData = static_cast<uint8_t *>(pvDisplayData);
-    for(i =0; i< LCD_VERTICAL_MAX_96; i++)
-    for(j =0; j< (LCD_HORIZONTAL_MAX_96>>3); j++)
+    for(i =0; i< LCD_VERTICAL_MAX_128; i++)
+    for(j =0; j< (LCD_HORIZONTAL_MAX_128>>3); j++)
             *pucData++ = ucValue;
 
 #ifdef NON_VOLATILE_MEMORY_BUFFER
@@ -196,7 +196,7 @@ static void Sharp96x96_InitializeDisplayBuffer(void *pvDisplayData,
 //! \return None.
 //
 //*****************************************************************************
-static void Sharp96x96_PixelDraw(void *pvDisplayData, int16_t lX, int16_t lY,
+static void Sharp128x128_PixelDraw(void *pvDisplayData, int16_t lX, int16_t lY,
                                    uint16_t ulValue)
 {
 
@@ -205,9 +205,9 @@ static void Sharp96x96_PixelDraw(void *pvDisplayData, int16_t lX, int16_t lY,
 #endif
 
 	if( ClrBlack == ulValue){
-		DisplayBuffer96[lY][lX>>3] &= ~(0x80 >> (lX & 0x7));
+		DisplayBuffer128[lY][lX>>3] &= ~(0x80 >> (lX & 0x7));
 	}else{
-		DisplayBuffer96[lY][lX>>3] |= (0x80 >> (lX & 0x7));
+		DisplayBuffer128[lY][lX>>3] |= (0x80 >> (lX & 0x7));
 	}
 
 #ifdef NON_VOLATILE_MEMORY_BUFFER
@@ -240,14 +240,14 @@ static void Sharp96x96_PixelDraw(void *pvDisplayData, int16_t lX, int16_t lY,
 //! \return None.
 //
 //*****************************************************************************
-static void Sharp96x96_DrawMultiple(void *pvDisplayData, int16_t lX,
+static void Sharp128x128_DrawMultiple(void *pvDisplayData, int16_t lX,
                                            int16_t lY, int16_t lX0, int16_t lCount,
                                            int16_t lBPP,
                                            const uint8_t *pucData,
                                            const uint32_t *pucPalette)
 {  
 
-	uint8_t *pData = &DisplayBuffer96[lY][lX>>3];
+	uint8_t *pData = &DisplayBuffer128[lY][lX>>3];
 	uint16_t xj = 0;
 
 #ifdef NON_VOLATILE_MEMORY_BUFFER
@@ -283,7 +283,7 @@ static void Sharp96x96_DrawMultiple(void *pvDisplayData, int16_t lX,
 //! \return None.
 //
 //*****************************************************************************
-static void Sharp96x96_LineDrawH(void *pvDisplayData, int16_t lX1, int16_t lX2,
+static void Sharp128x128_LineDrawH(void *pvDisplayData, int16_t lX1, int16_t lX2,
                                    int16_t lY, uint16_t ulValue)
 {
 	uint16_t xi = 0;
@@ -306,7 +306,7 @@ static void Sharp96x96_LineDrawH(void *pvDisplayData, int16_t lX1, int16_t lX2,
 	if(x_index_min != x_index_max){
 
 		//set buffer to correct location
-		pucData = &DisplayBuffer96[lY][x_index_min];
+		pucData = &DisplayBuffer128[lY][x_index_min];
 
 		//black pixels (clear bits)
 		if(ClrBlack == ulValue)
@@ -346,7 +346,7 @@ static void Sharp96x96_LineDrawH(void *pvDisplayData, int16_t lX1, int16_t lX2,
 		ucfirst_x_byte &= uclast_x_byte;
 
 		//set buffer to correct location
-		pucData = &DisplayBuffer96[lY][x_index_min];
+		pucData = &DisplayBuffer128[lY][x_index_min];
 
 		//draw black pixels (clear bits)
 		if(ClrBlack == ulValue)
@@ -383,7 +383,7 @@ static void Sharp96x96_LineDrawH(void *pvDisplayData, int16_t lX1, int16_t lX2,
 //! \return None.
 //
 //*****************************************************************************
-static void Sharp96x96_LineDrawV(void *pvDisplayData, int16_t lX, int16_t lY1,
+static void Sharp128x128_LineDrawV(void *pvDisplayData, int16_t lX, int16_t lY1,
                                    int16_t lY2, uint16_t ulValue)
 {
 
@@ -405,12 +405,12 @@ static void Sharp96x96_LineDrawV(void *pvDisplayData, int16_t lX, int16_t lY1,
 		//black pixels (clear bits)
 		if(ClrBlack == ulValue)
 		{
-			DisplayBuffer96[yi][x_index] &= ~data_byte;
+			DisplayBuffer128[yi][x_index] &= ~data_byte;
 		}
 		//white pixels (set bits)
 		else
 		{
-			DisplayBuffer96[yi][x_index] |= data_byte;
+			DisplayBuffer128[yi][x_index] |= data_byte;
 		}
 	}
 
@@ -436,7 +436,7 @@ static void Sharp96x96_LineDrawV(void *pvDisplayData, int16_t lX, int16_t lY1,
 //! \return None.
 //
 //*****************************************************************************
-static void Sharp96x96_RectFill(void *pvDisplayData, const Graphics_Rectangle *pRect,
+static void Sharp128x128_RectFill(void *pvDisplayData, const Graphics_Rectangle *pRect,
                                   uint16_t ulValue)
 {
 	uint16_t xi = 0;
@@ -464,7 +464,7 @@ static void Sharp96x96_RectFill(void *pvDisplayData, const Graphics_Rectangle *p
 		for (yi = pRect->sYMin; yi<= pRect->sYMax; yi++)
 		{
 			//set buffer to correct location
-			pucData = &DisplayBuffer96[yi][x_index_min];
+			pucData = &DisplayBuffer128[yi][x_index_min];
 
 			//black pixels (clear bits)
 			if(ClrBlack == ulValue)
@@ -505,7 +505,7 @@ static void Sharp96x96_RectFill(void *pvDisplayData, const Graphics_Rectangle *p
 		ucfirst_x_byte &= uclast_x_byte;
 
 		//set buffer to correct location
-		pucData = &DisplayBuffer96[pRect->sYMin][x_index_min];
+		pucData = &DisplayBuffer128[pRect->sYMin][x_index_min];
 
 		//black pixels (clear bits)
 		if(ClrBlack == ulValue)
@@ -543,7 +543,7 @@ static void Sharp96x96_RectFill(void *pvDisplayData, const Graphics_Rectangle *p
 //! \return Returns the display-driver specific color
 //
 //*****************************************************************************
-static uint32_t Sharp96x96_ColorTranslate(void *pvDisplayData,
+static uint32_t Sharp128x128_ColorTranslate(void *pvDisplayData,
                                         uint32_t ulValue)
 {
     //
@@ -568,27 +568,27 @@ static uint32_t Sharp96x96_ColorTranslate(void *pvDisplayData,
 //! \return None.
 //
 //*****************************************************************************
-static void Sharp96x96_Flush (void *pvDisplayData)
+static void Sharp128x128_Flush (void *pvDisplayData)
 {
-	uint8_t *pucData = &DisplayBuffer96[0][0];
+	uint8_t *pucData = &DisplayBuffer128[0][0];
 	int32_t xi =0;
 	int32_t xj = 0;
 	//image update mode(1X000000b)
 	uint8_t command = SHARP_LCD_CMD_WRITE_LINE;
 
 	//COM inversion bit
-	//command = command^VCOMbit96;
+	//command = command^VCOMbit128;
 
 	HAL_LCD_setCS();
 
 	HAL_LCD_writeCommandOrData(command);
-	flagSendToggleVCOMCommand96 = SHARP_SKIP_TOGGLE_VCOM_COMMAND;
+	flagSendToggleVCOMCommand128 = SHARP_SKIP_TOGGLE_VCOM_COMMAND;
 #ifdef LANDSCAPE
-	for(xj=0; xj<LCD_VERTICAL_MAX_96; xj++)
+	for(xj=0; xj<LCD_VERTICAL_MAX_128; xj++)
 		{
-		  HAL_LCD_writeCommandOrData(Sharp96x96_reverse(xj + 1));
+		  HAL_LCD_writeCommandOrData(Sharp128x128_reverse(xj + 1));
 
-		  for(xi=0; xi<(LCD_HORIZONTAL_MAX_96>>3); xi++)
+		  for(xi=0; xi<(LCD_HORIZONTAL_MAX_128>>3); xi++)
 		  {
 			HAL_LCD_writeCommandOrData(*(pucData++));
 		  }
@@ -596,15 +596,15 @@ static void Sharp96x96_Flush (void *pvDisplayData)
 		}
 #endif
 #ifdef LANDSCAPE_FLIP
-	pucData = &DisplayBuffer96[LCD_VERTICAL_MAX_96-1][(LCD_HORIZONTAL_MAX_96>>3)-1];
+	pucData = &DisplayBuffer128[LCD_VERTICAL_MAX_128-1][(LCD_HORIZONTAL_MAX_128>>3)-1];
 
-	for(xj=1; xj<=LCD_VERTICAL_MAX_96; xj++)
+	for(xj=1; xj<=LCD_VERTICAL_MAX_128; xj++)
 	{
-		HAL_LCD_writeCommandOrData(Sharp96x96_reverse(xj));
+		HAL_LCD_writeCommandOrData(Sharp128x128_reverse(xj));
 
-	  for(xi=0; xi < (LCD_HORIZONTAL_MAX_96>>3); xi++)
+	  for(xi=0; xi < (LCD_HORIZONTAL_MAX_128>>3); xi++)
 	  {
-		HAL_LCD_writeCommandOrData(Sharp96x96_reverse(*pucData--));
+		HAL_LCD_writeCommandOrData(Sharp128x128_reverse(*pucData--));
 	  }
 	  HAL_LCD_writeCommandOrData(SHARP_LCD_TRAILER_BYTE);
 	}
@@ -636,17 +636,17 @@ static void Sharp96x96_Flush (void *pvDisplayData)
 //! \return None.
 //
 //*****************************************************************************
-static void Sharp96x96_ClearScreen (void *pvDisplayData, uint16_t ulValue)
+static void Sharp128x128_ClearScreen (void *pvDisplayData, uint16_t ulValue)
 {
 	//clear screen mode(0X100000b)
 	uint8_t command = SHARP_LCD_CMD_CLEAR_SCREEN;
 	//COM inversion bit
-	//command = command^VCOMbit96;
+	//command = command^VCOMbit128;
 
 	HAL_LCD_setCS();
 
 	HAL_LCD_writeCommandOrData(command);
-	flagSendToggleVCOMCommand96 = SHARP_SKIP_TOGGLE_VCOM_COMMAND;
+	flagSendToggleVCOMCommand128 = SHARP_SKIP_TOGGLE_VCOM_COMMAND;
 	HAL_LCD_writeCommandOrData(SHARP_LCD_TRAILER_BYTE);
 
 	// Wait for last byte to be sent, then drop SCS
@@ -658,9 +658,9 @@ static void Sharp96x96_ClearScreen (void *pvDisplayData, uint16_t ulValue)
 
 	HAL_LCD_clearCS();
 	if(ClrBlack == ulValue)
-	Sharp96x96_InitializeDisplayBuffer(pvDisplayData, SHARP_BLACK);
+	Sharp128x128_InitializeDisplayBuffer(pvDisplayData, SHARP_BLACK);
 	else
-	Sharp96x96_InitializeDisplayBuffer(pvDisplayData, SHARP_WHITE);
+	Sharp128x128_InitializeDisplayBuffer(pvDisplayData, SHARP_WHITE);
 
 }
 
@@ -673,20 +673,20 @@ static void Sharp96x96_ClearScreen (void *pvDisplayData, uint16_t ulValue)
 //! sharpLCD panel 
 //
 //*****************************************************************************
-const Graphics_Display g_sharp96x96LCD =
+const Graphics_Display g_sharp128x128LCD =
 {
     sizeof(tDisplay),
-    DisplayBuffer96,
-    LCD_HORIZONTAL_MAX_96,
-    LCD_VERTICAL_MAX_96,
-    Sharp96x96_PixelDraw, //PixelDraw,
-    Sharp96x96_DrawMultiple,
-    Sharp96x96_LineDrawH,
-    Sharp96x96_LineDrawV, //LineDrawV,
-    Sharp96x96_RectFill, //RectFill,
-    Sharp96x96_ColorTranslate,
-    Sharp96x96_Flush, //Flush
-    Sharp96x96_ClearScreen //Clear screen. Contents of display buffer unmodified
+    DisplayBuffer128,
+    LCD_HORIZONTAL_MAX_128,
+    LCD_VERTICAL_MAX_128,
+    Sharp128x128_PixelDraw, //PixelDraw,
+    Sharp128x128_DrawMultiple,
+    Sharp128x128_LineDrawH,
+    Sharp128x128_LineDrawV, //LineDrawV,
+    Sharp128x128_RectFill, //RectFill,
+    Sharp128x128_ColorTranslate,
+    Sharp128x128_Flush, //Flush
+    Sharp128x128_ClearScreen //Clear screen. Contents of display buffer unmodified
 };
 
 

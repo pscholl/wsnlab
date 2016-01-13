@@ -1,7 +1,7 @@
 /*
 * Author: Sebastian Boettcher
 * 
-* Wrapper class for the Sharp 96x96 Display using GrLib and LcdDriver code.
+* Wrapper class for the Sharp Display using GrLib and LcdDriver code.
 *
 */
 
@@ -18,7 +18,8 @@
 #include <time.h>
 
 #include "Sharp96x96.h"
-#include "HAL_MSP_EXP430FR5969_Sharp96x96.h"
+#include "Sharp128x128.h"
+#include "LcdDriver.h"
 #include "grlib.h"
 
 #define PI 3.14159265
@@ -26,7 +27,7 @@
 class display_edison {
  public:
   // standard constructor, initializes the display with a black on white 6x8 font
-  display_edison(uint8_t clk_hands=3);
+  display_edison(uint8_t res = 128, uint8_t clk_hands=3);
   // destructor, closes mraa ports
   ~display_edison();
 
@@ -59,9 +60,12 @@ class display_edison {
   bool is_refreshed() {return m_refreshed;}
   bool is_active() {return m_active;}
 
+  uint8_t resolution() {return m_res;}
+
  private:
   int ccharge; // charge cache 
   int chour, cminute, csecond; // time cache 
+  uint8_t m_res;
   uint8_t c_hands;
   tContext g_sContext;
   bool m_refreshed;

@@ -14,8 +14,9 @@ SOURCES = src/platypus.cpp \
 					src/mcu_edison.cpp \
 					src/batgauge_edison.cpp \
 					src/ldc_edison.cpp \
-					LcdDriver/HAL_MSP_EXP430FR5969_Sharp96x96.c \
+					LcdDriver/LcdDriver.c \
 					LcdDriver/Sharp96x96.c \
+					LcdDriver/Sharp128x128.c \
 					GrLib/fonts/fontfixed6x8.c \
 					GrLib/grlib/context.c \
 					GrLib/grlib/display.c \
@@ -25,16 +26,22 @@ SOURCES = src/platypus.cpp \
 					GrLib/grlib/string.c
 
 MAIN_BINARIES=$(addprefix bin/,$(basename $(notdir $(wildcard src/*Main.cpp))))
+TEST_BINARIES=$(addprefix bin/,$(basename $(notdir $(wildcard src/*Test.cpp))))
 OBJECTS = $(subst src/,build/,$(subst .cpp,.o,$(SOURCES)))
 
 
 .PRECIOUS: build/%.o
 
-all: compile
+all: main test
 
-compile: dirs $(SOURCES) $(MAIN_BINARIES)
+main: dirs $(SOURCES) $(MAIN_BINARIES)
+
+test: dirs $(SOURCES) $(TEST_BINARIES)
 
 bin/%Main: $(OBJECTS) build/%Main.o
+	$(CXX) $(CFLAGS) -o $@ $^ $(LOPTS)
+
+bin/%Test: $(OBJECTS) build/%Test.o
 	$(CXX) $(CFLAGS) -o $@ $^ $(LOPTS)
 
 build/%.o: src/%.cpp
@@ -44,9 +51,6 @@ build/%.o: src/%.cpp
 
 dirs:
 	mkdir -p bin build
-
-checkstyle:
-	python2 cpplint.py --filter=-runtime/references,-whitespace/comments,-readability/streams --linelength=200 *.cpp
 
 .PHONY:
 	clean

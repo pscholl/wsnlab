@@ -1,7 +1,7 @@
 /*
 * Author: Sebastian Boettcher
 * 
-* Wrapper class for the Sharp 96x96 Display using GrLib and LcdDriver code.
+* Wrapper class for the Sharp Display using GrLib and LcdDriver code.
 *
 */
 
@@ -9,7 +9,7 @@
 
 
 //_______________________________________________________________________________________________________
-display_edison::display_edison(uint8_t clk_hands) : c_hands(clk_hands), m_active(false) {
+display_edison::display_edison(uint8_t res, uint8_t clk_hands) : m_res(res), c_hands(clk_hands), m_active(false) {
   init();
 }
 
@@ -26,7 +26,17 @@ void display_edison::init() {
     return;
 
   HAL_LCD_initDisplay();
-  Graphics_initContext(&g_sContext, &g_sharp96x96LCD);
+
+  if (m_res == 96) {
+    Graphics_initContext(&g_sContext, &g_sharp96x96LCD);
+  } else if (m_res == 128) {
+    Graphics_initContext(&g_sContext, &g_sharp128x128LCD);
+  } else {
+    printf("[DSP] Non-valid resolution! (%i)\n", m_res);
+    fflush(stdout);
+    return;
+  }
+
   Graphics_setForegroundColor(&g_sContext, ClrWhite);
   Graphics_setBackgroundColor(&g_sContext, ClrBlack);
   Graphics_setFont(&g_sContext, &g_sFontFixed6x8);
@@ -106,7 +116,7 @@ void display_edison::batteryCharge(int charge) {
   std::ostringstream bstr;
     bstr << std::setw(3) << std::setfill(' ') << charge;
       std::string batstr = bstr.str();
-  if (LCD_VERTICAL_MAX==96) {
+  if (m_res==96) {
     Graphics_drawLine(&g_sContext,90,9,92,9);  
     Graphics_drawLine(&g_sContext,88,10,94,10);
     Graphics_drawLine(&g_sContext,88,11,88,19);
@@ -115,7 +125,7 @@ void display_edison::batteryCharge(int charge) {
       Graphics_drawLine(&g_sContext,89,20-i,93,20-i);  
     print(batstr, 87, 3, true);
   }
-  else if (LCD_VERTICAL_MAX==128) {
+  else if (m_res==128) {
     Graphics_drawLine(&g_sContext,120,9,124,9);  
     Graphics_drawLine(&g_sContext,120,10,124,10);
     Graphics_drawLine(&g_sContext,118,11,126,11);
@@ -154,9 +164,9 @@ void display_edison::analogClock(struct tm * timeinfo, bool force_refresh) {
   chour = hour;
   cminute = minute;
 
-  int cX = (LCD_HORIZONTAL_MAX/2); // center X
-  int cY = (LCD_VERTICAL_MAX/2); // center Y
-  int r = (LCD_HORIZONTAL_MAX-1)/2; // radius
+  int cX = (m_res/2); // center X
+  int cY = (m_res/2); // center Y
+  int r = (m_res-1)/2; // radius
   int margin = 2; // margin from outer circle
 
   // clear display
@@ -200,8 +210,8 @@ void display_edison::analogClock(struct tm * timeinfo, bool force_refresh) {
   int x2 = 0;
   int y2 = 0;
   float angle = 0.0;
-  int hour_len = (LCD_VERTICAL_MAX==96)?20:30;
-  int min_len  = (LCD_VERTICAL_MAX==96)?30:45;
+  int hour_len = (m_res==96)?20:30;
+  int min_len  = (m_res==96)?30:45;
 
   // hour (+ interpolation based on current minute)
   angle = -PI/2.0 + ((hour / 12.0) * 2.0 * PI)+((minute / 60.0) * PI / 6.0);

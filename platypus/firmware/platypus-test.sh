@@ -17,5 +17,5 @@ make -j
 
 echo
 echo "> Testing platypus"
-bin/ppsTestMain --id-only
+bin/platypusTest --id-only
 

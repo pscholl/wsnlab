@@ -1,12 +1,12 @@
 //*****************************************************************************
 //
-// Sharp96x96.h - Prototypes for the Sharp96x96 LCD display driver
+// Sharp128x128.h - Prototypes for the Sharp128x128 LCD display driver
 //
 //*****************************************************************************
 
 
-#ifndef __SHARPLCD96_H__
-#define __SHARPLCD96_H__
+#ifndef __SHARPLCD128_H__
+#define __SHARPLCD128_H__
 
 #include "grlib.h"
 
@@ -21,8 +21,8 @@
 
 
 // LCD Screen Dimensions
-#define LCD_VERTICAL_MAX_96                   96
-#define LCD_HORIZONTAL_MAX_96                 96
+#define LCD_VERTICAL_MAX_128                   128
+#define LCD_HORIZONTAL_MAX_128                 128
 
 
 // Define LCD Screen Orientation Here
@@ -51,10 +51,10 @@
 // Prototypes for the globals exported by this driver.
 //
 //*****************************************************************************
-extern const Graphics_Display g_sharp96x96LCD;
+extern const Graphics_Display g_sharp128x128LCD;
 
-extern void Sharp96x96_SendToggleVCOMCommand(void);
-extern void Sharp96x96_initDisplay(void);
-extern void Sharp96x96_disable(void);
-extern void Sharp96x96_enable(void);
-#endif // __SHARPLCD96_H__
+extern void Sharp128x128_SendToggleVCOMCommand(void);
+extern void Sharp128x128_initDisplay(int res);
+extern void Sharp128x128_disable(void);
+extern void Sharp128x128_enable(void);
+#endif // __SHARPLCD128_H__
