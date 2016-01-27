@@ -9,13 +9,15 @@
 
 
 //_______________________________________________________________________________________________________
-display_edison::display_edison(uint8_t res, uint8_t clk_hands) : m_res(res), c_hands(clk_hands), m_active(false) {
+display_edison::display_edison(uint8_t res, uint8_t clk_hands) : m_res(res), c_hands(clk_hands),
+ m_active(false), m_threaded(false), m_flush(false), m_clear(false) {
   init();
 }
 
 
 //_______________________________________________________________________________________________________
 display_edison::~display_edison() {
+  stopThread();
   stop();
 }
 
@@ -248,10 +250,77 @@ void display_edison::analogClock(struct tm * timeinfo, bool force_refresh) {
 
 //_______________________________________________________________________________________________________
 void display_edison::flush() {
-  Graphics_flushBuffer(&g_sContext);
+  if (m_threaded)
+    m_flush = true;
+  else
+    Graphics_flushBuffer(&g_sContext);
 }
 
 //_______________________________________________________________________________________________________
 void display_edison::clear() {
-  Graphics_clearDisplay(&g_sContext);
+  if (m_threaded)
+    m_clear = true;
+  else
+    Graphics_clearDisplay(&g_sContext);
+}
+
+
+
+
+/*
+ * Threading
+ */
+
+//_______________________________________________________________________________________________________
+void display_edison::startThread() {
+  if (m_threaded)
+    return;
+
+  printf("[DSP] Spawning display refresh thread.\n");
+  fflush(stdout);
+
+  if (!m_active)
+    init();
+
+  m_threaded = true;
+
+  m_thread_dspRefresh = std::thread(&display_edison::t_dspRefresh, this);
+  pthread_setname_np(m_thread_dspRefresh.native_handle(), "dsp:refresh");
+}
+
+//_______________________________________________________________________________________________________
+void display_edison::stopThread() {
+  if (!m_threaded)
+    return;
+
+  printf("[DSP] Joining display refresh thread.\n");
+  fflush(stdout);
+
+  m_threaded = false;
+  m_thread_dspRefresh.join();
+}
+
+//_______________________________________________________________________________________________________
+void display_edison::t_dspRefresh() {
+  std::chrono::high_resolution_clock::time_point tBegin = std::chrono::high_resolution_clock::now();
+  std::chrono::high_resolution_clock::time_point tEnd = std::chrono::high_resolution_clock::now();
+  while (m_threaded) {
+    tBegin = std::chrono::high_resolution_clock::now();
+
+    if (m_flush) {
+      Graphics_flushBuffer(&g_sContext);
+      m_flush = false;
+    } else if (m_clear) {
+      Graphics_clearDisplay(&g_sContext);
+      m_clear = false;
+    } else {
+      HAL_LCD_displayMode();
+    }
+
+    tEnd = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(tEnd - tBegin).count();
+    // 60Hz rate (16.67ms)
+    if (duration < 16670)
+      usleep(16670 - duration);
+  }
 }

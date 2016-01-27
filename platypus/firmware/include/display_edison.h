@@ -14,8 +14,15 @@
 #include <iomanip>
 #include <sstream>
 
+#include <thread>
+#include <atomic>
+#include <mutex>
+#include <chrono>
+
 #include <math.h>
 #include <time.h>
+
+#include <pthread.h>
 
 #include "Sharp96x96.h"
 #include "Sharp128x128.h"
@@ -62,7 +69,18 @@ class display_edison {
 
   uint8_t resolution() {return m_res;}
 
+  // return pointer to internal graphics context
+  Graphics_Context* context() {return &g_sContext;}
+
+  // spawn and join display refresh thread
+  // according to the display data sheet the internal frame buffer needs
+  // to be refreshed at ca. 60Hz during operation
+  void startThread();
+  void stopThread();
+
  private:
+  void t_dspRefresh();
+
   int ccharge; // charge cache 
   int chour, cminute, csecond; // time cache 
   uint8_t m_res;
@@ -70,6 +88,11 @@ class display_edison {
   tContext g_sContext;
   bool m_refreshed;
   bool m_active;
+
+  bool m_threaded;
+  bool m_flush; // flag to trigger flush during threaded operation
+  bool m_clear; // flag to trigger clear during threaded operation
+  std::thread m_thread_dspRefresh;
 };
 
 #endif // display_edison_h

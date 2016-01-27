@@ -93,11 +93,14 @@ void imu_edison::setupIMU() {
 
   initCompass();
 
+  assert(GFS_SEL >= 0 && GFS_SEL <= 3);
+  assert(AFS_SEL >= 0 && AFS_SEL <= 3);
+
   // MPU init
   writeRegister(MPU_SMPLRT_DIV, 0x27, m_mpu_address); //set sample rate to 25Hz (rate=1kHz/(1+div))
   writeRegister(MPU_CONFIG, 0x06, m_mpu_address); //set DLPF_CFG to lowest bandwith (5 Hz @ Fs=1kHz)
-  writeRegister(MPU_GYRO_CONFIG, 0x00, m_mpu_address); //Gyro Config, fs_sel to +-250 deg/s
-  writeRegister(MPU_ACCEL_CONFIG, 0x08, m_mpu_address); //Accel Config, fs_sel to +-4g
+  writeRegister(MPU_GYRO_CONFIG, GFS_SEL << 3, m_mpu_address); //Gyro Config, fs_sel
+  writeRegister(MPU_ACCEL_CONFIG, AFS_SEL << 3, m_mpu_address); //Accel Config, fs_sel
   writeRegister(MPU_ACCEL_CONFIG_2, 0x00, m_mpu_address); //Accel Config 2, set A_DLPF_CFG to highest bandwith (460 Hz @ Fs=1kHz)
   writeRegister(MPU_FIFO_EN, 0x78, m_mpu_address); //enable fifo buffer for accel XYZ, gyro XYZ
   writeRegister(MPU_INT_PIN_CFG, 0xA0, m_mpu_address); //interrupt pin config
@@ -262,22 +265,36 @@ std::vector<float> imu_edison::toReadable(std::vector<int8_t> in) {
 
 //_______________________________________________________________________________________________________
 std::vector<float> imu_edison::toReadable(std::vector<int16_t> in) {
+  assert(in.size() == 7);
+
   std::vector<float> out;
 
-  // convert accelerometer data according to MPU9150 data sheet
-  out.push_back(in[0] / 8192.0 * 9.807);
-  out.push_back(in[1] / 8192.0 * 9.807);
-  out.push_back(in[2] / 8192.0 * 9.807);
-  // convert gyroscope data according to MPU9150 data sheet
-  out.push_back(in[3] / 131.0);
-  out.push_back(in[4] / 131.0);
-  out.push_back(in[5] / 131.0);
-  // convert temperature sensor data according to MPU9150 data sheet
-  out.push_back((in[6] / 340.0) + 35);
+  // convert accelerometer data according to MPU9250 data sheet
+  out.push_back(accelToReadable(in[0]));
+  out.push_back(accelToReadable(in[1]));
+  out.push_back(accelToReadable(in[2]));
+  // convert gyroscope data according to MPU9250 data sheet
+  out.push_back(gyroToReadable(in[3]));
+  out.push_back(gyroToReadable(in[4]));
+  out.push_back(gyroToReadable(in[5]));
+  // convert temperature sensor data according to MPU9250 data sheet
+  out.push_back(tempToReadable(in[6]));
 
   return out;
 }
 
+//_______________________________________________________________________________________________________
+float imu_edison::accelToReadable(int16_t a) {
+  return (a / (16384.0 / pow(2, AFS_SEL)) * 9.807);
+}
+//_______________________________________________________________________________________________________
+float imu_edison::gyroToReadable(int16_t g) {
+  return (g / (131.0 / pow(2, GFS_SEL)));
+}
+//_______________________________________________________________________________________________________
+float imu_edison::tempToReadable(int16_t t) {
+  return (((t - 21) / 333.87) + 21);
+}
 
 
 /*

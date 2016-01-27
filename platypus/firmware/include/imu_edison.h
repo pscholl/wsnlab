@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <math.h>
+#include <assert.h>
 
 #include "mraa.hpp"
 
@@ -180,6 +181,20 @@ struct BME_calibration {
   int8_t  dig_H6;
 };
 
+// Gyro Full-Scale range select
+// 0: +-250 deg/s
+// 1: +-500 deg/s
+// 2: +-1000 deg/s
+// 3: +-2000 deg/s
+#define GFS_SEL 0
+
+// Accel Full-Scale range select
+// 0: +-2 g
+// 1: +-4 g
+// 2: +-8 g
+// 3: +-16 g
+#define AFS_SEL 1
+
 
 class imu_edison {
  public:
@@ -213,8 +228,14 @@ class imu_edison {
 
   // returns readable data from given 8Bit or 16Bit raw data
   // accel values in m/s^2, gyro values in deg/s, temperature in degrees Celsius
+  // !! only to be used in conjunction with return values from readRawIMU() !!
   std::vector<float> toReadable(std::vector<int8_t> in);
   std::vector<float> toReadable(std::vector<int16_t> in);
+
+  // convert raw values to readable, according to data sheet
+  float accelToReadable(int16_t a);
+  float gyroToReadable(int16_t g);
+  float tempToReadable(int16_t t);
 
   // returns the Interrupt Status register as is
   uint8_t getIntStatus();

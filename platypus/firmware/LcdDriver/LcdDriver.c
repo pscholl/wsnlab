@@ -86,6 +86,7 @@ void PWM_Run(void)
 	mraa_pwm_enable(pwm,1);
 	//printf("PWM enabled\n");
 
+
 	mraa_pwm_write(pwm, DUTY_CYCLE);
 	//printf("Duty Cycle set to %f%%\n", (100 * DUTY_CYCLE));
 
@@ -131,11 +132,13 @@ void HAL_LCD_writeCommandOrData(uint16_t command)
 }
 
 void HAL_LCD_clearCS(void){
-	mraa_gpio_write(SCS, 0);
+  usleep(2);
+  mraa_gpio_write(SCS, 0);
 }
 
 void HAL_LCD_setCS(void){
-	mraa_gpio_write(SCS, 1);
+  mraa_gpio_write(SCS, 1);
+  usleep(6);
 }
 
 void HAL_LCD_waitUntilLcdWriteFinish(void)
@@ -158,4 +161,13 @@ void HAL_LCD_prepareMemoryWrite()
 
 void HAL_LCD_finishMemoryWrite()
 {
+}
+
+
+void HAL_LCD_displayMode()
+{
+	HAL_LCD_setCS();
+	HAL_LCD_writeCommandOrData(MLCD_DM);
+	HAL_LCD_writeCommandOrData(MLCD_TR);
+	HAL_LCD_clearCS();
 }
