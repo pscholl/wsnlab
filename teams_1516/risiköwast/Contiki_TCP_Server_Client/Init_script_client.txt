@@ -1,0 +1,21 @@
+#!/bin/bash
+sleep 2
+
+#Adressen müssen für jede Node angepasst werden
+ip -6 addr add a::2/64 dev wlan0
+echo IPv6 set to a::2/64 on wlan0 device
+
+/root/contiki/simon/tcp-client.minimal-net &
+echo started node in Contiki/examples folder
+
+sleep 2
+
+ip -6 addr add a:2::1/64 dev tap0
+echo IPv6 set to a:2::1/64 on tap0 device
+
+sysctl -w net.ipv6.conf.all.forwarding=1
+echo Enabled forwarding on this device
+
+#Standardroute zum Master Knoten
+ip -6 route add default via a::1
+echo Default route to a::1 added

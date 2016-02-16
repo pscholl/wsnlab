@@ -1,0 +1,30 @@
+#!/bin/bash
+sleep 2
+
+ip -6 addr add a::1/64 dev wlan0
+echo IPv6 set to a::1/64 on wlan0 device
+
+/root/contiki/simon/tcp-server.minimal-net &
+echo started node in Contiki/examples folder
+
+sleep 2
+
+ip -6 addr add a:1::1/64 dev tap0
+echo IPv6 set to a:1::1/64 on tap0 device
+
+sysctl -w net.ipv6.conf.all.forwarding=1
+echo Enabled forwarding on this device
+
+#Route um die a:X Netzwerke dem Server bekannt zu machen
+ip -6 route add a:2::/64 via a::2
+ip -6 route add a:3::/64 via a::3
+ip -6 route add a:4::/64 via a::4
+ip -6 route add a:5::/64 via a::5
+ip -6 route add a:6::/64 via a::6
+ip -6 route add a:7::/64 via a::7
+ip -6 route add a:8::/64 via a::8
+ip -6 route add a:9::/64 via a::9
+ip -6 route add a:10::/64 via a::10
+ip -6 route add a:11::/64 via a::11
+ip -6 route add a:12::/64 via a::12
+echo Added routes to Master 2 to 12
