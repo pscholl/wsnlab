@@ -1,0 +1,15 @@
+# copy to /lib/systemd/system/
+# run systemctl daemon-reload
+# run systemctl start|stop|enable|disable|status platypus-test
+
+[Unit]
+Description=platypus-test
+Requires=multi-user.target
+After=multi-user.target
+
+[Service]
+ExecStart=/usr/bin/platypus-test
+Restart=no
+
+[Install]
+WantedBy=multi-user.target

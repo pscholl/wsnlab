@@ -1,0 +1,65 @@
+# memos: $@ file name of the target of the rule
+#	 $^ all dependencies of this rule
+#	 $< the first dependency
+#	 .PRECIOUS targets marked with this are not deleted when make is killed
+
+
+#  How To Crosscompile: https://gist.github.com/darylposnett/f11088a0ded82484a47e
+#
+#  source /opt/poky-edison/1.7.2/environment-setup-core2-32-poky-linux
+
+CFLAGS2=-g -Wall -std=c++0x -fdiagnostics-color=auto -I$$HOME/boost_1_59_0 -Iinclude -IGrLib/grlib -ILcdDriver -lmraa -L$$HOME/boost_1_59_0/stage/lib -lboost_program_options -lboost_system
+COPTS=-pthread
+LOPTS=-pthread
+
+SOURCES = src/platypus.cpp \
+					src/imu_edison.cpp \
+					src/display_edison.cpp \
+					src/mcu_edison.cpp \
+					src/batgauge_edison.cpp \
+					src/ldc_edison.cpp \
+					LcdDriver/LcdDriver.c \
+					LcdDriver/Sharp96x96.c \
+					LcdDriver/Sharp128x128.c \
+					GrLib/fonts/fontfixed6x8.c \
+					GrLib/grlib/context.c \
+					GrLib/grlib/display.c \
+					GrLib/grlib/line.c \
+					GrLib/grlib/circle.c \
+					GrLib/grlib/rectangle.c \
+					GrLib/grlib/string.c
+
+MAIN_BINARIES=$(addprefix bin/,$(basename $(notdir $(wildcard src/*Main.cpp))))
+TEST_BINARIES=$(addprefix bin/,$(basename $(notdir $(wildcard src/*Test.cpp))))
+OBJECTS = $(subst src/,build/,$(subst .cpp,.o,$(SOURCES)))
+
+
+.PRECIOUS: build/%.o
+
+all: main test
+
+main: dirs $(SOURCES) $(MAIN_BINARIES)
+
+test: dirs $(SOURCES) $(TEST_BINARIES)
+
+bin/%Main: $(OBJECTS) build/%Main.o
+	$(CXX) $(CFLAGS) $(CFLAGS2) -o $@ $^ $(LOPTS)
+
+bin/%Test: $(OBJECTS) build/%Test.o
+	$(CXX) $(CFLAGS) $(CFLAGS2) -o $@ $^ $(LOPTS)
+
+build/%.o: src/%.cpp
+	$(CXX) $(CFLAGS) $(CFLAGS2) -c $< -o $@ $(COPTS)
+
+
+
+dirs:
+	mkdir -p bin build
+
+.PHONY:
+	clean
+
+clean:
+	rm -rf bin build
+	rm -f *~
+	rm -f */*~

@@ -1,0 +1,147 @@
+  ____  _       _                            ____ _                              _                
+ |  _ \| | __ _| |_ _   _ _ __  _   _ ___   / ___| |__   __ _ _ __   __ _  ___  | |    ___   __ _ 
+ | |_) | |/ _` | __| | | | '_ \| | | / __| | |   | '_ \ / _` | '_ \ / _` |/ _ \ | |   / _ \ / _` |
+ |  __/| | (_| | |_| |_| | |_) | |_| \__ \ | |___| | | | (_| | | | | (_| |  __/ | |__| (_) | (_| |
+ |_|   |_|\__,_|\__|\__, | .__/ \__,_|___/  \____|_| |_|\__,_|_| |_|\__, |\___| |_____\___/ \__, |
+                    |___/|_|                                        |___/                   |___/       
+
+
+Platypus_v1_0_Proto_v15_0
+Change Log:
+-Changed I2C bus 1 to I2C bus 6
+-Removed some unwanted ground vias
+
+
+Platypus_v1_0_Proto_v14_0
+Change Log:
+-Combined Felix's charger design from v12_0
+-Added Ground Plane on Top Layer
+
+
+Platypus_v1_0_Proto_v13_0
+Change Log:
+- Minor Routing changes 
+
+
+Platypus_v1_0_Proto_v12_0   
+Change Log:
+- Used v10 as basis
+- Added MCP73831 (Battery Management)
+- using pins of I2C6 instead of I2C1 now because MCU cant use I2C1
+
+
+Platypus_v1_0_Proto_v11_0                                                                                              
+Change Log:
+- Replaced the TSL2584TSV by a new and relativly larger TSL25723FN, thus no more Soldering Problems(hopefully!)
+- ADSL(Address Select) pin no longer needed and the fixed Address for TSL25723FN is 0x39
+- Rerouted the Connector for the FLEX_PCB of the Battery
+- Substituted 4k7 as IMU Interrupt Pull-Up instead of 10k
+
+Platypus_v1_0_Proto_v10_0                                                                                              
+Change Log:
+- Added new Connector for the Li-ion Battery's FLEX_PCB(but it was inverted by mistake!)
+- Designed a complete FLEX_PCB for the Platypus
+
+
+Platypus_v1_0_Proto_v9_0                                                                                              
+Change Log:
+- Minor Routing changes
+
+
+Platypus_v1_0_Proto_v8_0                                                                                              
+Change Log:
+- Added display control to GPIO44 in Intel Edison
+
+
+Platypus_v1_0_Proto_v7_0                                                                                              
+Change Log:
+- Minor Routing changes
+
+
+Platypus_v1_0_Proto_v6_0
+Change Log:
+- Added the new BME280 Pressure, Humidity and Temperature Sensor
+- Added Platypus Logo(Layer 21)
+
+
+Platypus_v1_0_Proto_v5_0
+Change Log:
+- Added the new Ambient Light Sensor(TSL2584TSV)
+
+
+Platypus_v1_0_Proto_v4_0
+Change Log:
+- Shifted to MPU-9250/9255 with the smaller package and 0.4mm pitch
+
+
+Platypus_v1_0_Proto_v3_0
+Change Log:
+- Replaced the MPU-9150 with MPU-9250 and did the necessary rerouting
+
+
+Platypus_v1_0_Proto_v2_0
+Change Log:
+- Project name change to Platypus
+- PCB-Pool DRC passed
+- Added Ground - plane(required some rerouting)
+- Removed Copper Fills on Top-layer
+- Added Labels(Layer 51)
+
+
+Hedgehog_v2_0_Proto_v1_0
+Change Log:
+- Pull-Up resistors were added to the I2C bus of the IMU
+- The bi-directional MOSFET level-shifters were replace by a single 8-bit level-translator(TXB0108)
+- The PWRBTN# was pulled-up to VSYS
+- The Battery Gauge(MAX17043) was added and interfaced with the I2C Bus-1 of the MPU
+- The decoupling-cap of the Sharp display was changed to 1µF(based on design consideration)
+- The I2C test-point was extended to add the second I2C bus
+- A new test-point was added for the Sharp Display
+
+
+   ,@@@@.                 
+ @@@@@@@@@@               
+@@@@@@@@@@@@              
++@@@@@@@@@@@@             
+ @@@@@@@@@@@@@            
+  @@@@@@@@@@@@@@,...      
+    @@@@@@@@@@@@@@@@@+@@  
+      @@@@@@@@@@@@@@@@ @  
+       .@@@@@@@@@@@@@@,@: 
+        @@@@@@@@@@@@@@ @@ 
+        @@@@@@@@@@@@    @ 
+        @@@@@@@@@@@@@     
+       @@@@@@@@@@@@@@@    
+       @@@@@@@@@@@@@@@.   
+       @@@@@@@@@@@@@@@@   
+       @@@@@@@@@@@@@@@@   
+      @ @@@@@@@@@@@@@@@@  
+     .@@   @@@@@@@@@@@@@  
+      @@@  .@@@@@@@@@@@@  
+       @    @@@@@@@@@@@@  
+            @@@@@@@@@@@@  
+            @@@@@@@@@@@   
+            @@@@@@@@@@@   
+            @@@@@@@@@@@   
+            @@@@@@@@@@@   
+           @@@@@@@@@@@@   
+        ,@ @@@@@@@@@@@@@  
+       '@@ @@@@@@@@@@@@@  
+        @@@@@@  '@@@@@@@  
+        #@  ,@@@@ @@@@@   
+           '@@@@@@ @@@ @  
+          ,@@@@@@@.  @@@  
+          @@@@@@@@@  @@@  
+         @@@@@@  @@  .    
+         @@@@@ @@@@       
+         ,,. @ @@@        
+         @@@@,@@@         
+        @@@@@@ @          
+       @@@@@@@,           
+       @@@@@@@            
+      @@@@@@@             
+     ,@@@@@@@             
+     @@@@@@@              
+     @@@@@@@              
+      @@@@@               
+        @.                                

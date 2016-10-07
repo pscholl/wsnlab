@@ -1,0 +1,77 @@
+<panel>
+   <size>Small</size>
+   <boards class="java.util.ArrayList">
+      <panelBoard>
+         <filename>C:\Users\Freddy-ESE\Documents\platypus\hardware\charger\v2_0\charger_pcb\charger_pcb</filename>
+         <x>4985</x>
+         <y>74855</y>
+         <angle>0</angle>
+         <generateOutline>true</generateOutline>
+         <topLayerTimestamp>2016-06-24 13:13:06.648 MESZ</topLayerTimestamp>
+         <bottomLayerTimestamp>2016-06-24 13:13:06.668 MESZ</bottomLayerTimestamp>
+      </panelBoard>
+      <panelBoard>
+         <filename>C:\Users\Freddy-ESE\Documents\platypus\hardware\charger\v2_0\charger_pcb\charger_pcb</filename>
+         <x>40635</x>
+         <y>74970</y>
+         <angle>0</angle>
+         <generateOutline>true</generateOutline>
+         <topLayerTimestamp>2016-06-24 13:13:06.648 MESZ</topLayerTimestamp>
+         <bottomLayerTimestamp>2016-06-24 13:13:06.668 MESZ</bottomLayerTimestamp>
+      </panelBoard>
+      <panelBoard>
+         <filename>C:\Users\Freddy-ESE\Documents\platypus\hardware\charger\v2_0\charger_pcb\charger_pcb</filename>
+         <x>4985</x>
+         <y>53810</y>
+         <angle>0</angle>
+         <generateOutline>true</generateOutline>
+         <topLayerTimestamp>2016-06-24 13:13:06.648 MESZ</topLayerTimestamp>
+         <bottomLayerTimestamp>2016-06-24 13:13:06.668 MESZ</bottomLayerTimestamp>
+      </panelBoard>
+      <panelBoard>
+         <filename>C:\Users\Freddy-ESE\Documents\platypus\hardware\charger\v2_0\charger_pcb\charger_pcb</filename>
+         <x>40750</x>
+         <y>53810</y>
+         <angle>0</angle>
+         <generateOutline>true</generateOutline>
+         <topLayerTimestamp>2016-06-24 13:13:06.648 MESZ</topLayerTimestamp>
+         <bottomLayerTimestamp>2016-06-24 13:13:06.668 MESZ</bottomLayerTimestamp>
+      </panelBoard>
+      <panelBoard>
+         <filename>C:\Users\Freddy-ESE\Documents\platypus\hardware\charger\v2_0\charger_pcb\charger_pcb</filename>
+         <x>4985</x>
+         <y>32305</y>
+         <angle>0</angle>
+         <generateOutline>true</generateOutline>
+         <topLayerTimestamp>2016-06-24 13:13:06.648 MESZ</topLayerTimestamp>
+         <bottomLayerTimestamp>2016-06-24 13:13:06.668 MESZ</bottomLayerTimestamp>
+      </panelBoard>
+      <panelBoard>
+         <filename>C:\Users\Freddy-ESE\Documents\platypus\hardware\charger\v2_0\charger_pcb\charger_pcb</filename>
+         <x>40865</x>
+         <y>32420</y>
+         <angle>0</angle>
+         <generateOutline>true</generateOutline>
+         <topLayerTimestamp>2016-06-24 13:13:06.648 MESZ</topLayerTimestamp>
+         <bottomLayerTimestamp>2016-06-24 13:13:06.668 MESZ</bottomLayerTimestamp>
+      </panelBoard>
+      <panelBoard>
+         <filename>C:\Users\Freddy-ESE\Documents\platypus\hardware\charger\v2_0\charger_pcb\charger_pcb</filename>
+         <x>5215</x>
+         <y>11030</y>
+         <angle>0</angle>
+         <generateOutline>true</generateOutline>
+         <topLayerTimestamp>2016-06-24 13:13:06.648 MESZ</topLayerTimestamp>
+         <bottomLayerTimestamp>2016-06-24 13:13:06.668 MESZ</bottomLayerTimestamp>
+      </panelBoard>
+      <panelBoard>
+         <filename>C:\Users\Freddy-ESE\Documents\platypus\hardware\charger\v2_0\charger_pcb\charger_pcb</filename>
+         <x>40865</x>
+         <y>11145</y>
+         <angle>0</angle>
+         <generateOutline>true</generateOutline>
+         <topLayerTimestamp>2016-06-24 13:13:06.648 MESZ</topLayerTimestamp>
+         <bottomLayerTimestamp>2016-06-24 13:13:06.668 MESZ</bottomLayerTimestamp>
+      </panelBoard>
+   </boards>
+</panel>
