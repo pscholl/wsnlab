@@ -8,10 +8,8 @@ CFLAGS=-g -Wall -std=c++0x -fdiagnostics-color=auto -Iinclude -IGrLib/grlib -ILc
 COPTS=-pthread
 LOPTS=-pthread
 
-SOURCES = src/platypus.cpp \
-					src/imu_edison.cpp \
+SOURCES = src/imu_edison.cpp \
 					src/display_edison.cpp \
-					src/mcu_edison.cpp \
 					src/batgauge_edison.cpp \
 					src/ldc_edison.cpp \
 					LcdDriver/LcdDriver.c \

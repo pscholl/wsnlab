@@ -1,3 +1,0 @@
-
-on the edison, copy intel_mcu.bin to /lib/firmware (and replace if necessary), then reboot
-
