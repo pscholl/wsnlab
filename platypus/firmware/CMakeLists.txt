@@ -44,21 +44,19 @@ INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/LcdDriver )
 INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/GrLib/grlib )
 
 # Boost specific stuff
-INCLUDE_DIRECTORIES( $ENV{HOME}/boost_1_60_0 )
+#INCLUDE_DIRECTORIES( $ENV{HOME}/boost_1_60_0 )
 #LINK_DIRECTORIES( $ENV{HOME}/boost_1_60_0/stage/lib )
-SET( BOOST_ROOT $ENV{HOME}/boost_1_60_0 )
+#SET( BOOST_ROOT $ENV{HOME}/boost_1_60_0 )
 
 # Find necessary packages
 FIND_PACKAGE( Threads )
-FIND_PACKAGE( Boost 1.60 COMPONENTS program_options system REQUIRED )
+FIND_PACKAGE( Boost 1.56 COMPONENTS program_options system REQUIRED )
 
 # Source files that are not executables
-SET( PPS src/platypus.cpp )
 SET( DSP src/display_edison.cpp )
 SET( IMU src/imu_edison.cpp )
 SET( BAT src/batgauge_edison.cpp )
 SET( LDC src/ldc_edison.cpp )
-SET( MCU src/mcu_edison.cpp )
 
 
 
@@ -79,11 +77,9 @@ ADD_LIBRARY( dsp ${DSP} )
 TARGET_LINK_LIBRARIES( dsp LcdDriver GrLib )
 
 # other libraries
-ADD_LIBRARY( pps ${PPS} )
 ADD_LIBRARY( imu ${IMU} )
 ADD_LIBRARY( bat ${BAT} )
 ADD_LIBRARY( ldc ${LDC} )
-ADD_LIBRARY( mcu ${MCU} )
 
 
 
@@ -91,14 +87,8 @@ ADD_LIBRARY( mcu ${MCU} )
 # EXECUTABLES
 #
 
-ADD_EXECUTABLE( platypusMain src/platypusMain.cpp )
-TARGET_LINK_LIBRARIES( platypusMain pps dsp imu bat ldc mcu -lmraa ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} )
-
 ADD_EXECUTABLE( platypusTest src/platypusTest.cpp )
 TARGET_LINK_LIBRARIES( platypusTest dsp imu bat ldc -lmraa ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} )
-
-ADD_EXECUTABLE( graphTest src/graphTest.cpp )
-TARGET_LINK_LIBRARIES( graphTest dsp imu -lmraa ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} )
 
 ADD_EXECUTABLE( batgaugeTest src/batgaugeTest.cpp )
 TARGET_LINK_LIBRARIES( batgaugeTest bat -lmraa ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} )

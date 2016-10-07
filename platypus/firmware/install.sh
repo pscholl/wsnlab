@@ -16,7 +16,7 @@ opkg update
 opkg install make cmake coreutils packagegroup-core-buildessential
 opkg install mraa
 opkg install boost-dev
-opkg install libquadmath-dev
+#opkg install libquadmath-dev
 
 echo
 echo "> Building firmware"
@@ -37,13 +37,14 @@ cp platypus.conf /etc/platypus/
 
 systemctl daemon-reload
 
-echo
-while true; do
-  read -p "> Install complete. Reboot? " yn
-  case $yn in
-    [Yy]* ) reboot; break;;
-    [Nn]* ) exit;;
-    * ) echo "> Please answer yes or no.";;
-  esac
-done
+echo "> Install complete."
+#echo
+#while true; do
+#  read -p "> Install complete. Reboot? " yn
+#  case $yn in
+#    [Yy]* ) reboot; break;;
+#    [Nn]* ) exit;;
+#    * ) echo "> Please answer yes or no.";;
+#  esac
+#done
 
