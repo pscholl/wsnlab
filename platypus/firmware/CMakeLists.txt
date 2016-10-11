@@ -90,8 +90,6 @@ ADD_LIBRARY( ldc ${LDC} )
 ADD_EXECUTABLE( platypusTest src/platypusTest.cpp )
 TARGET_LINK_LIBRARIES( platypusTest dsp imu bat ldc -lmraa ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} )
 
-ADD_EXECUTABLE( batgaugeTest src/batgaugeTest.cpp )
-TARGET_LINK_LIBRARIES( batgaugeTest bat -lmraa ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} )
 
 
 
