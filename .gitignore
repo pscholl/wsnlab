@@ -28,5 +28,8 @@
 *.x86_64
 *.hex
 
+# Backups from Editors
+*~
+
 # Debug files
 *.dSYM/
