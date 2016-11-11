@@ -65,30 +65,32 @@ SET( LDC src/ldc_edison.cpp )
 #
 
 # display libraries
-file( GLOB LCDDRIVER_SRC "LcdDriver/*.c" "LcdDriver/*.h" )
+file( GLOB LCDDRIVER_SRC "LcdDriver/*.c" )
 SET_SOURCE_FILES_PROPERTIES( ${LCDDRIVER_SRC} PROPERTIES LANGUAGE CXX )
 ADD_LIBRARY( LcdDriver ${LCDDRIVER_SRC} )
 
-file( GLOB GRLIB_SRC "GrLib/grlib/*.c" "GrLib/grlib/*.h" )
+file( GLOB GRLIB_SRC "GrLib/grlib/*.c" )
 file( GLOB GRLIB_FONT_SRC "GrLib/fonts/*.c" )
 ADD_LIBRARY( GrLib ${GRLIB_SRC} ${GRLIB_FONT_SRC} )
 
-ADD_LIBRARY( dsp ${DSP} )
-TARGET_LINK_LIBRARIES( dsp LcdDriver GrLib )
+#ADD_LIBRARY( dsp ${DSP} )
+#TARGET_LINK_LIBRARIES( dsp LcdDriver GrLib )
 
 # other libraries
-ADD_LIBRARY( imu ${IMU} )
-ADD_LIBRARY( bat ${BAT} )
-ADD_LIBRARY( ldc ${LDC} )
+#ADD_LIBRARY( imu ${IMU} )
+#ADD_LIBRARY( bat ${BAT} )
+#ADD_LIBRARY( ldc ${LDC} )
 
-
+ADD_LIBRARY( platypus ${DSP} ${IMU} ${BAT} ${LDC} )
+TARGET_LINK_LIBRARIES( platypus LcdDriver GrLib )
 
 #
 # EXECUTABLES
 #
 
 ADD_EXECUTABLE( platypusTest src/platypusTest.cpp )
-TARGET_LINK_LIBRARIES( platypusTest dsp imu bat ldc -lmraa ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} )
+#TARGET_LINK_LIBRARIES( platypusTest dsp imu bat ldc -lmraa ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} )
+TARGET_LINK_LIBRARIES( platypusTest platypus -lmraa ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} )
 
 
 
