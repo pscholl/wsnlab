@@ -29,9 +29,16 @@ You may also want to delete CMakeFiles/ and CMakeCache.txt at this point to clea
 # CONFIGURATION
 #
 
-SET( CMAKE_CXX_STANDARD 14 )
+SET( CMAKE_VERBOSE_MAKEFILE on )
+
+SET( CMAKE_CXX_STANDARD 11 )
+
+SET( CMAKE_BUILD_TYPE Release )
+#SET( CMAKE_C_FLAGS_RELEASE "..." )
+#SET( CMAKE_CXX_FLAGS_RELEASE "..." )
 
 # Set compiler and linker flags
+SET( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fdiagnostics-color=always" )
 SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fdiagnostics-color=always" )
 # SET( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lmraa" )
 
@@ -39,11 +46,6 @@ SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fdiagnostics-color=always" )
 SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin )
 SET( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib )
 SET( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib )
-
-# Some include directories
-INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/include )
-INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/LcdDriver )
-INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/GrLib/grlib )
 
 # Boost specific stuff
 #INCLUDE_DIRECTORIES( $ENV{HOME}/boost_1_60_0 )
@@ -54,45 +56,32 @@ INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/GrLib/grlib )
 FIND_PACKAGE( Threads )
 FIND_PACKAGE( Boost 1.56 COMPONENTS program_options system REQUIRED )
 
-# Source files that are not executables
-SET( DSP src/display_edison.cpp )
-SET( IMU src/imu_edison.cpp )
-SET( BAT src/batgauge_edison.cpp )
-SET( LDC src/ldc_edison.cpp )
-
-
-
 #
 # LIBRARIES
 #
 
 # display libraries
-file( GLOB LCDDRIVER_SRC "LcdDriver/*.c" )
-SET_SOURCE_FILES_PROPERTIES( ${LCDDRIVER_SRC} PROPERTIES LANGUAGE CXX )
-ADD_LIBRARY( LcdDriver ${LCDDRIVER_SRC} )
-
 file( GLOB GRLIB_SRC "GrLib/grlib/*.c" )
 file( GLOB GRLIB_FONT_SRC "GrLib/fonts/*.c" )
 ADD_LIBRARY( GrLib ${GRLIB_SRC} ${GRLIB_FONT_SRC} )
+TARGET_INCLUDE_DIRECTORIES( GrLib PUBLIC GrLib/grlib )
 
-#ADD_LIBRARY( dsp ${DSP} )
-#TARGET_LINK_LIBRARIES( dsp LcdDriver GrLib )
+file( GLOB LCDDRIVER_SRC "LcdDriver/*.c" )
+SET_SOURCE_FILES_PROPERTIES( ${LCDDRIVER_SRC} PROPERTIES LANGUAGE CXX )
+ADD_LIBRARY( LcdDriver ${LCDDRIVER_SRC} )
+TARGET_LINK_LIBRARIES( LcdDriver GrLib )
+TARGET_INCLUDE_DIRECTORIES( LcdDriver INTERFACE LcdDriver )
 
-# other libraries
-#ADD_LIBRARY( imu ${IMU} )
-#ADD_LIBRARY( bat ${BAT} )
-#ADD_LIBRARY( ldc ${LDC} )
-
-ADD_LIBRARY( platypus ${DSP} ${IMU} ${BAT} ${LDC} )
+ADD_LIBRARY( platypus src/display_edison.cpp src/imu_edison.cpp src/batgauge_edison.cpp src/ldc_edison.cpp )
 TARGET_LINK_LIBRARIES( platypus LcdDriver GrLib )
+TARGET_INCLUDE_DIRECTORIES( platypus PUBLIC include )
 
 #
 # EXECUTABLES
 #
 
 ADD_EXECUTABLE( platypusTest src/platypusTest.cpp )
-#TARGET_LINK_LIBRARIES( platypusTest dsp imu bat ldc -lmraa ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} )
-TARGET_LINK_LIBRARIES( platypusTest platypus -lmraa ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} )
+TARGET_LINK_LIBRARIES( platypusTest platypus -lmraa ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} )
 
 
 
