@@ -72,7 +72,7 @@ ADD_LIBRARY( LcdDriver ${LCDDRIVER_SRC} )
 TARGET_LINK_LIBRARIES( LcdDriver GrLib )
 TARGET_INCLUDE_DIRECTORIES( LcdDriver INTERFACE LcdDriver )
 
-ADD_LIBRARY( platypus src/display_edison.cpp src/imu_edison.cpp src/batgauge_edison.cpp src/ldc_edison.cpp )
+ADD_LIBRARY( platypus src/display_edison.cpp src/imu_edison.cpp src/batgauge_edison.cpp src/ldc_edison.cpp src/SharpLCD.cpp)
 TARGET_LINK_LIBRARIES( platypus LcdDriver GrLib )
 TARGET_INCLUDE_DIRECTORIES( platypus PUBLIC include )
 
@@ -80,9 +80,11 @@ TARGET_INCLUDE_DIRECTORIES( platypus PUBLIC include )
 # EXECUTABLES
 #
 
+ADD_EXECUTABLE( lcdTest src/lcdTest.cpp )
+TARGET_LINK_LIBRARIES( lcdTest platypus -lmraa ${CMAKE_THREAD_LIBS_INIT} )
+
 ADD_EXECUTABLE( platypusTest src/platypusTest.cpp )
 TARGET_LINK_LIBRARIES( platypusTest platypus -lmraa ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} )
-
 
 
 
