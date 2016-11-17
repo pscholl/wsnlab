@@ -10,6 +10,11 @@
 
 #include "grlib.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 //*****************************************************************************
 //
 // User Configuration for the LCD Driver
@@ -57,4 +62,10 @@ extern void Sharp96x96_SendToggleVCOMCommand(void);
 extern void Sharp96x96_initDisplay(void);
 extern void Sharp96x96_disable(void);
 extern void Sharp96x96_enable(void);
+
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif // __SHARPLCD96_H__

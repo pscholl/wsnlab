@@ -3,6 +3,10 @@
 
 #include "mraa.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 // Non-volatile Memory used to store DisplayBuffer
 //#define NON_VOLATILE_MEMORY_BUFFER
@@ -54,5 +58,10 @@ extern void PWM_Init(void);
 extern void Display_Init(void);
 extern void PWM_Run(void);
 extern void Display_Stop(void);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // __LCDDRIVER_H__
