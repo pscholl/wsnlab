@@ -20,7 +20,7 @@ typedef struct Graphics_RadioButton
 	uint32_t selectedColor;		/*!< Selected radio color */
 	uint32_t notSelectedColor;	/*!< Not Selected radio color */
 	const Graphics_Font *font;	/*!< Font for text to be displayed in button */
-	int8_t *text;               /*!< Text to be displayed in button */
+	const char *text;               /*!< Text to be displayed in button */
 } Graphics_RadioButton;
 
 //*****************************************************************************

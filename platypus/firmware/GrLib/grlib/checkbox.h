@@ -20,7 +20,7 @@ typedef struct Graphics_CheckBox
 	uint32_t selectedColor;	   /*!< Selected check color */
 	uint8_t numbOfChar;		   /*!< Number of characters in checkbox message */
 	const Graphics_Font *font; /*!< Font for text to be displayed in button */
-	int8_t *text;			   /*!< Text to be displayed in button */
+	const char *text;			   /*!< Text to be displayed in button */
 } Graphics_CheckBox;
 
 //*****************************************************************************

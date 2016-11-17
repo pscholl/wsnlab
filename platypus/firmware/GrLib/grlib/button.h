@@ -24,7 +24,7 @@ typedef struct Graphics_Button
 	uint32_t selectedTextColor; /*!< Selected text color */
 	uint16_t textXPos;     /*!< x coordinate for text upper left corner */
 	uint16_t textYPos;     /*!< y coordinate for text upper left corner */
-	int8_t *text;		   /*!< Text to be displayed in button */
+	const char *text;		   /*!< Text to be displayed in button */
 	const Graphics_Font *font; /*!< Font for text to be displayed in button */
 } Graphics_Button;
 
