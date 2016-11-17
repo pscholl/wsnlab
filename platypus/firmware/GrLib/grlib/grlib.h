@@ -5,7 +5,7 @@
 #ifndef __GRLIB_H__
 #define __GRLIB_H__
 
-#define NDEBUG
+//#define NDEBUG
 #include "assert.h"
 
 //*****************************************************************************
