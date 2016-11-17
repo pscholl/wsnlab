@@ -28,8 +28,8 @@
 void Graphics_drawButton(const Graphics_Context *context,
 		const Graphics_Button *button)
 {
-	uint32_t origFrgnd = g_sContext.foreground;
-	Graphics_Font *origFont = (Graphics_Font *) g_sContext.font;
+	uint32_t origFrgnd = context->foreground;
+	Graphics_Font *origFont = (Graphics_Font *) context->font;
 
 	Graphics_Rectangle borderRect ={
 			button->xMin,
@@ -46,33 +46,33 @@ void Graphics_drawButton(const Graphics_Context *context,
 	};
 
 
-	Graphics_setForegroundColor(&g_sContext,button->borderColor);
-	Graphics_fillRectangle(&g_sContext, &borderRect);
+	Graphics_setForegroundColor(context,button->borderColor);
+	Graphics_fillRectangle(context, &borderRect);
 
 	if(button->selected){
-		Graphics_setForegroundColor(&g_sContext,button->selectedColor);
+		Graphics_setForegroundColor(context,button->selectedColor);
 	}else{
-		Graphics_setForegroundColor(&g_sContext,button->fillColor);
+		Graphics_setForegroundColor(context,button->fillColor);
 	}
 
-	Graphics_fillRectangle(&g_sContext, &innerRect);
+	Graphics_fillRectangle(context, &innerRect);
 
-	Graphics_setFont(&g_sContext,button->font);
+	Graphics_setFont(context,button->font);
 
 	if(button->selected){
-		Graphics_setForegroundColor(&g_sContext,button->selectedTextColor);
+		Graphics_setForegroundColor(context,button->selectedTextColor);
 	}else{
-		Graphics_setForegroundColor(&g_sContext,button->textColor);
+		Graphics_setForegroundColor(context,button->textColor);
 	}
-	Graphics_drawString(&g_sContext,
+	Graphics_drawString(context,
 			button->text,
 			AUTO_STRING_LENGTH,
 			button->textXPos,
 			button->textYPos,
 			TRANSPARENT_TEXT);
 
-	Graphics_setFont(&g_sContext,origFont);
-	Graphics_setForegroundColor(&g_sContext,origFrgnd);
+	Graphics_setFont(context,origFont);
+	Graphics_setForegroundColor(context,origFrgnd);
 }
 
 
@@ -114,8 +114,8 @@ bool Graphics_isButtonSelected(const Graphics_Button *button,
 void Graphics_drawSelectedButton(const Graphics_Context *context,
 		const Graphics_Button *button)
 {
-	uint32_t origFrgnd = g_sContext.foreground;
-	Graphics_Font *origFont = (Graphics_Font *) g_sContext.font;
+	uint32_t origFrgnd = context->foreground;
+	Graphics_Font *origFont = (Graphics_Font *) context->font;
 
 	Graphics_Rectangle innerRect ={
 			button->xMin + button->borderWidth,
@@ -124,21 +124,21 @@ void Graphics_drawSelectedButton(const Graphics_Context *context,
 			button->yMax - button->borderWidth,
 	};
 
-	Graphics_setForegroundColor(&g_sContext,button->selectedColor);
-	Graphics_fillRectangle(&g_sContext, &innerRect);
+	Graphics_setForegroundColor(context,button->selectedColor);
+	Graphics_fillRectangle(context, &innerRect);
 
-	Graphics_setFont(&g_sContext,button->font);
+	Graphics_setFont(context,button->font);
 
-	Graphics_setForegroundColor(&g_sContext,button->selectedTextColor);
-	Graphics_drawString(&g_sContext,
+	Graphics_setForegroundColor(context,button->selectedTextColor);
+	Graphics_drawString(context,
 			button->text,
 			AUTO_STRING_LENGTH,
 			button->textXPos,
 			button->textYPos,
 			TRANSPARENT_TEXT);
 
-	Graphics_setFont(&g_sContext,origFont);
-	Graphics_setForegroundColor(&g_sContext,origFrgnd);
+	Graphics_setFont(context,origFont);
+	Graphics_setForegroundColor(context,origFrgnd);
 }
 
 //*****************************************************************************
@@ -157,8 +157,8 @@ void Graphics_drawSelectedButton(const Graphics_Context *context,
 void Graphics_drawReleasedButton(const Graphics_Context *context,
 		const Graphics_Button *button)
 {
-	uint32_t origFrgnd = g_sContext.foreground;
-	Graphics_Font *origFont = (Graphics_Font *) g_sContext.font;
+	uint32_t origFrgnd = context->foreground;
+	Graphics_Font *origFont = (Graphics_Font *) context->font;
 
 	Graphics_Rectangle innerRect ={
 			button->xMin + button->borderWidth,
@@ -167,21 +167,21 @@ void Graphics_drawReleasedButton(const Graphics_Context *context,
 			button->yMax - button->borderWidth,
 	};
 
-	Graphics_setForegroundColor(&g_sContext,button->fillColor);
-	Graphics_fillRectangle(&g_sContext, &innerRect);
+	Graphics_setForegroundColor(context,button->fillColor);
+	Graphics_fillRectangle(context, &innerRect);
 
-	Graphics_setFont(&g_sContext,button->font);
+	Graphics_setFont(context,button->font);
 
-	Graphics_setForegroundColor(&g_sContext,button->textColor);
-	Graphics_drawString(&g_sContext,
+	Graphics_setForegroundColor(context,button->textColor);
+	Graphics_drawString(context,
 			button->text,
 			AUTO_STRING_LENGTH,
 			button->textXPos,
 			button->textYPos,
 			TRANSPARENT_TEXT);
 
-	Graphics_setFont(&g_sContext,origFont);
-	Graphics_setForegroundColor(&g_sContext,origFrgnd);
+	Graphics_setFont(context,origFont);
+	Graphics_setForegroundColor(context,origFrgnd);
 }
 
 //*****************************************************************************

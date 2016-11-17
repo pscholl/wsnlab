@@ -29,8 +29,8 @@ void Graphics_drawCheckBox(const Graphics_Context *context,
 		const Graphics_CheckBox *checkBox)
 {
 	uint16_t lenght, textXPos, textYPos;
-	uint32_t origFrgnd = g_sContext.foreground;
-	Graphics_Font *origFont = (Graphics_Font *) g_sContext.font;
+	uint32_t origFrgnd = context->foreground;
+	Graphics_Font *origFont = (Graphics_Font *) context->font;
 
 	// Define outer circle position and radius
 	lenght = ((checkBox->font)->height);
@@ -42,22 +42,22 @@ void Graphics_drawCheckBox(const Graphics_Context *context,
 			checkBox->yPosition + lenght
 	};
 
-	Graphics_setForegroundColor(&g_sContext, checkBox->backgroundColor);
-	Graphics_fillRectangle(&g_sContext,&selRec);
+	Graphics_setForegroundColor(context, checkBox->backgroundColor);
+	Graphics_fillRectangle(context,&selRec);
 
-	Graphics_setForegroundColor(&g_sContext, checkBox->textColor);
-	Graphics_drawRectangle(&g_sContext,&selRec);
+	Graphics_setForegroundColor(context, checkBox->textColor);
+	Graphics_drawRectangle(context,&selRec);
 
 	if(checkBox->selected){
-		Graphics_setForegroundColor(&g_sContext, checkBox->selectedColor);
-		Graphics_drawLine(&g_sContext,
+		Graphics_setForegroundColor(context, checkBox->selectedColor);
+		Graphics_drawLine(context,
 			checkBox->xPosition,
 			checkBox->yPosition,
 			checkBox->xPosition + lenght,
 			checkBox->yPosition + lenght);
 
 
-		Graphics_drawLine(&g_sContext,
+		Graphics_drawLine(context,
 					checkBox->xPosition,
 					checkBox->yPosition + lenght,
 					checkBox->xPosition + lenght,
@@ -67,18 +67,18 @@ void Graphics_drawCheckBox(const Graphics_Context *context,
 	textXPos =  (checkBox->xPosition) + (lenght) +(checkBox->gap);
 	textYPos =  (checkBox->yPosition);
 
-	Graphics_setForegroundColor(&g_sContext, checkBox->textColor);
-	Graphics_setFont(&g_sContext,checkBox->font);
+	Graphics_setForegroundColor(context, checkBox->textColor);
+	Graphics_setFont(context,checkBox->font);
 
-	Graphics_drawString(&g_sContext,
+	Graphics_drawString(context,
 			checkBox->text,
 			AUTO_STRING_LENGTH,
 			textXPos,
 			textYPos,
 			TRANSPARENT_TEXT);
 
-	Graphics_setFont(&g_sContext,origFont);
-	Graphics_setForegroundColor(&g_sContext,origFrgnd);
+	Graphics_setFont(context,origFont);
+	Graphics_setForegroundColor(context,origFrgnd);
 }
 
 
@@ -129,27 +129,27 @@ void Graphics_drawSelectedCheckBox(const Graphics_Context *context,
 		const Graphics_CheckBox *checkBox)
 {
 	uint8_t lenght;
-	uint32_t origFrgnd = g_sContext.foreground;
+	uint32_t origFrgnd = context->foreground;
 
 	// Define outer circle position and radius
 	lenght = ((checkBox->font)->height);
 
-	Graphics_setForegroundColor(&g_sContext, checkBox->selectedColor);
+	Graphics_setForegroundColor(context, checkBox->selectedColor);
 
-	Graphics_drawLine(&g_sContext,
+	Graphics_drawLine(context,
 			checkBox->xPosition,
 			checkBox->yPosition,
 			checkBox->xPosition + lenght,
 			checkBox->yPosition + lenght);
 
 
-	Graphics_drawLine(&g_sContext,
+	Graphics_drawLine(context,
 			checkBox->xPosition,
 			checkBox->yPosition + lenght,
 			checkBox->xPosition + lenght,
 			checkBox->yPosition);
 
-	Graphics_setForegroundColor(&g_sContext,origFrgnd);
+	Graphics_setForegroundColor(context,origFrgnd);
 }
 
 //*****************************************************************************
@@ -168,7 +168,7 @@ void Graphics_drawSelectedCheckBox(const Graphics_Context *context,
 void Graphics_drawReleasedCheckBox(const Graphics_Context *context,
 		const Graphics_CheckBox *checkBox)
 {
-	uint32_t origFrgnd = g_sContext.foreground;
+	uint32_t origFrgnd = context->foreground;
 	uint16_t lenght;
 
 	// Define outer circle position and radius
@@ -181,13 +181,13 @@ void Graphics_drawReleasedCheckBox(const Graphics_Context *context,
 			checkBox->yPosition + lenght
 	};
 
-	Graphics_setForegroundColor(&g_sContext, checkBox->backgroundColor);
-	Graphics_fillRectangle(&g_sContext,&selRec);
+	Graphics_setForegroundColor(context, checkBox->backgroundColor);
+	Graphics_fillRectangle(context,&selRec);
 
-	Graphics_setForegroundColor(&g_sContext, checkBox->textColor);
-	Graphics_drawRectangle(&g_sContext,&selRec);
+	Graphics_setForegroundColor(context, checkBox->textColor);
+	Graphics_drawRectangle(context,&selRec);
 
-	Graphics_setForegroundColor(&g_sContext,origFrgnd);
+	Graphics_setForegroundColor(context,origFrgnd);
 }
 //*****************************************************************************
 //

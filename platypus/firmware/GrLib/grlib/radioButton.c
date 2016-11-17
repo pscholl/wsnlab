@@ -29,23 +29,23 @@ void Graphics_drawRadioButton(const Graphics_Context *context,
 {
 	uint8_t outerRadius, innerRadius;
 	uint16_t textXPos, textYPos;
-	uint32_t origFrgnd = g_sContext.foreground;
-	Graphics_Font *origFont = (Graphics_Font *) g_sContext.font;
+	uint32_t origFrgnd = context->foreground;
+	Graphics_Font *origFont = (Graphics_Font *) context->font;
 
-	Graphics_setForegroundColor(&g_sContext, radioButton->textColor);
+	Graphics_setForegroundColor(context, radioButton->textColor);
 
 	// Define outer circle position and radius
 	outerRadius = (((radioButton->font)->height) >> 1 );
 
-	Graphics_drawCircle(&g_sContext,
+	Graphics_drawCircle(context,
 			radioButton->xPosition + outerRadius,
 			radioButton->yPosition + outerRadius,
 			(uint32_t) outerRadius);
 
 	if(radioButton->selected){
-		Graphics_setForegroundColor(&g_sContext, radioButton->selectedColor);
+		Graphics_setForegroundColor(context, radioButton->selectedColor);
 		innerRadius = outerRadius - 2;
-		Graphics_fillCircle(&g_sContext,
+		Graphics_fillCircle(context,
 				radioButton->xPosition + outerRadius,
 				radioButton->yPosition + outerRadius,
 				(uint32_t) innerRadius);
@@ -54,11 +54,11 @@ void Graphics_drawRadioButton(const Graphics_Context *context,
 	textXPos =  (radioButton->xPosition) + (2*outerRadius) +(radioButton->gap);
 	textYPos =  (radioButton->yPosition);
 
-	Graphics_setForegroundColor(&g_sContext, radioButton->textColor);
-	Graphics_setFont(&g_sContext,radioButton->font);
+	Graphics_setForegroundColor(context, radioButton->textColor);
+	Graphics_setFont(context,radioButton->font);
 
 
-	Graphics_drawString(&g_sContext,
+	Graphics_drawString(context,
 				radioButton->text,
 				AUTO_STRING_LENGTH,
 				textXPos,
@@ -67,8 +67,8 @@ void Graphics_drawRadioButton(const Graphics_Context *context,
 
 
 
-	Graphics_setFont(&g_sContext,origFont);
-	Graphics_setForegroundColor(&g_sContext,origFrgnd);
+	Graphics_setFont(context,origFont);
+	Graphics_setForegroundColor(context,origFrgnd);
 }
 
 //*****************************************************************************
@@ -119,23 +119,23 @@ void Graphics_drawSelectedRadioButton(const Graphics_Context *context,
 		const Graphics_RadioButton *radioButton)
 {
 	uint8_t outerRadius,innerRadius;
-	uint32_t origFrgnd = g_sContext.foreground;
-	Graphics_Font *origFont = (Graphics_Font *) g_sContext.font;
+	uint32_t origFrgnd = context->foreground;
+	Graphics_Font *origFont = (Graphics_Font *) context->font;
 
 	// Define outer circle position and radius
 	outerRadius = (((radioButton->font)->height) >> 1 );
 	innerRadius = outerRadius - 2;
 
-	Graphics_setForegroundColor(&g_sContext, radioButton->selectedColor);
-	Graphics_fillCircle(&g_sContext,
+	Graphics_setForegroundColor(context, radioButton->selectedColor);
+	Graphics_fillCircle(context,
 			radioButton->xPosition + outerRadius,
 			radioButton->yPosition + outerRadius,
 			(uint32_t) innerRadius);
 
 
 
-	Graphics_setFont(&g_sContext,origFont);
-	Graphics_setForegroundColor(&g_sContext,origFrgnd);
+	Graphics_setFont(context,origFont);
+	Graphics_setForegroundColor(context,origFrgnd);
 }
 
 //*****************************************************************************
@@ -156,20 +156,20 @@ void Graphics_drawReleasedRadioButton(const Graphics_Context *context,
 		const Graphics_RadioButton *radioButton)
 {
 	uint8_t outerRadius,innerRadius;
-	uint32_t origFrgnd = g_sContext.foreground;
+	uint32_t origFrgnd = context->foreground;
 
 	// Define outer circle position and radius
 	outerRadius = (((radioButton->font)->height) >> 1);
 	innerRadius = outerRadius - 2;
 
-	Graphics_setForegroundColor(&g_sContext,radioButton->notSelectedColor);
+	Graphics_setForegroundColor(context,radioButton->notSelectedColor);
 
-	Graphics_fillCircle(&g_sContext,
+	Graphics_fillCircle(context,
 			radioButton->xPosition + outerRadius,
 			radioButton->yPosition + outerRadius,
 			(uint32_t) innerRadius);
 
-	Graphics_setForegroundColor(&g_sContext,origFrgnd);
+	Graphics_setForegroundColor(context,origFrgnd);
 }
 
 //*****************************************************************************

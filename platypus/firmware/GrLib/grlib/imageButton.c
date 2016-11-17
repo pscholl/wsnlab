@@ -27,8 +27,8 @@
 void Graphics_drawImageButton(const Graphics_Context *context,
 		const Graphics_ImageButton *imageButton)
 {
-	uint32_t origFrgnd = g_sContext.foreground;
-	Graphics_Font *origFont = (Graphics_Font *) g_sContext.font;
+	uint32_t origFrgnd = context->foreground;
+	Graphics_Font *origFont = (Graphics_Font *) context->font;
 
 	Graphics_Rectangle borderRect ={
 			imageButton->xPosition,
@@ -39,18 +39,18 @@ void Graphics_drawImageButton(const Graphics_Context *context,
 
 
 	if(imageButton->selected){
-		Graphics_setForegroundColor(&g_sContext,imageButton->selectedColor);
+		Graphics_setForegroundColor(context,imageButton->selectedColor);
 	}else{
-		Graphics_setForegroundColor(&g_sContext,imageButton->borderColor);
+		Graphics_setForegroundColor(context,imageButton->borderColor);
 	}
-	Graphics_fillRectangle(&g_sContext,&borderRect);
+	Graphics_fillRectangle(context,&borderRect);
 
-	Graphics_drawImage(&g_sContext,imageButton->image,
+	Graphics_drawImage(context,imageButton->image,
 			imageButton->xPosition + imageButton->borderWidth,
 			imageButton->yPosition  + imageButton->borderWidth);
 
-	Graphics_setFont(&g_sContext,origFont);
-	Graphics_setForegroundColor(&g_sContext,origFrgnd);
+	Graphics_setFont(context,origFont);
+	Graphics_setForegroundColor(context,origFrgnd);
 }
 
 //*****************************************************************************
@@ -97,8 +97,8 @@ bool Graphics_isImageButtonSelected(const Graphics_ImageButton *imageButton,
 void Graphics_drawSelectedImageButton(const Graphics_Context *context,
 		const Graphics_ImageButton *imageButton)
 {
-	uint32_t origFrgnd = g_sContext.foreground;
-	Graphics_Font *origFont = (Graphics_Font *) g_sContext.font;
+	uint32_t origFrgnd = context->foreground;
+	Graphics_Font *origFont = (Graphics_Font *) context->font;
 
 	Graphics_Rectangle borderRect ={
 			imageButton->xPosition,
@@ -107,16 +107,16 @@ void Graphics_drawSelectedImageButton(const Graphics_Context *context,
 			imageButton->yPosition + imageButton->imageHeight + (2 * imageButton->borderWidth),
 	};
 
-	Graphics_setForegroundColor(&g_sContext,imageButton->selectedColor);
+	Graphics_setForegroundColor(context,imageButton->selectedColor);
 
-	Graphics_fillRectangle(&g_sContext,&borderRect);
+	Graphics_fillRectangle(context,&borderRect);
 
-	Graphics_drawImage(&g_sContext,imageButton->image,
+	Graphics_drawImage(context,imageButton->image,
 			imageButton->xPosition + imageButton->borderWidth,
 			imageButton->yPosition  + imageButton->borderWidth);
 
-	Graphics_setFont(&g_sContext,origFont);
-	Graphics_setForegroundColor(&g_sContext,origFrgnd);
+	Graphics_setFont(context,origFont);
+	Graphics_setForegroundColor(context,origFrgnd);
 }
 
 //*****************************************************************************
@@ -135,8 +135,8 @@ void Graphics_drawSelectedImageButton(const Graphics_Context *context,
 void Graphics_drawReleasedImageButton(const Graphics_Context *context,
 		const Graphics_ImageButton *imageButton)
 {
-	uint32_t origFrgnd = g_sContext.foreground;
-	Graphics_Font *origFont = (Graphics_Font *) g_sContext.font;
+	uint32_t origFrgnd = context->foreground;
+	Graphics_Font *origFont = (Graphics_Font *) context->font;
 
 	Graphics_Rectangle borderRect ={
 			imageButton->xPosition,
@@ -145,16 +145,16 @@ void Graphics_drawReleasedImageButton(const Graphics_Context *context,
 			imageButton->yPosition + imageButton->imageHeight + (2 * imageButton->borderWidth),
 	};
 
-	Graphics_setForegroundColor(&g_sContext,imageButton->borderColor);
+	Graphics_setForegroundColor(context,imageButton->borderColor);
 
-	Graphics_fillRectangle(&g_sContext,&borderRect);
+	Graphics_fillRectangle(context,&borderRect);
 
-	Graphics_drawImage(&g_sContext,imageButton->image,
+	Graphics_drawImage(context,imageButton->image,
 			imageButton->xPosition + imageButton->borderWidth,
 			imageButton->yPosition  + imageButton->borderWidth);
 
-	Graphics_setFont(&g_sContext,origFont);
-	Graphics_setForegroundColor(&g_sContext,origFrgnd);
+	Graphics_setFont(context,origFont);
+	Graphics_setForegroundColor(context,origFrgnd);
 }
 
 //*****************************************************************************
