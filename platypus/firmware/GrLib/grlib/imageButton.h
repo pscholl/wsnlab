@@ -23,7 +23,7 @@ typedef struct Graphics_ImageButton
 //*****************************************************************************
 //globals
 //*****************************************************************************
-extern Graphics_Context g_sContext;
+//extern Graphics_Context g_sContext;
 
 //*****************************************************************************
 // the function prototypes

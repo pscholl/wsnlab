@@ -26,7 +26,7 @@ typedef struct Graphics_CheckBox
 //*****************************************************************************
 //globals
 //*****************************************************************************
-extern Graphics_Context g_sContext;
+//extern Graphics_Context g_sContext;
 
 //*****************************************************************************
 // the function prototypes

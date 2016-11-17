@@ -26,7 +26,7 @@ typedef struct Graphics_RadioButton
 //*****************************************************************************
 //globals
 //*****************************************************************************
-extern Graphics_Context g_sContext;
+//extern Graphics_Context g_sContext;
 
 //*****************************************************************************
 // the function prototypes
