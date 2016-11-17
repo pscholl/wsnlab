@@ -25,7 +25,7 @@
 //! \return None.
 //
 //*****************************************************************************
-void Graphics_drawCheckBox(const Graphics_Context *context,
+void Graphics_drawCheckBox(Graphics_Context *context,
 		const Graphics_CheckBox *checkBox)
 {
 	uint16_t lenght, textXPos, textYPos;
@@ -125,7 +125,7 @@ bool Graphics_isCheckBoxSelected(const Graphics_CheckBox *checkBox,
 //! \return None.
 //
 //*****************************************************************************
-void Graphics_drawSelectedCheckBox(const Graphics_Context *context,
+void Graphics_drawSelectedCheckBox(Graphics_Context *context,
 		const Graphics_CheckBox *checkBox)
 {
 	uint8_t lenght;
@@ -165,7 +165,7 @@ void Graphics_drawSelectedCheckBox(const Graphics_Context *context,
 //! \return None.
 //
 //*****************************************************************************
-void Graphics_drawReleasedCheckBox(const Graphics_Context *context,
+void Graphics_drawReleasedCheckBox(Graphics_Context *context,
 		const Graphics_CheckBox *checkBox)
 {
 	uint32_t origFrgnd = context->foreground;

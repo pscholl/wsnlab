@@ -31,13 +31,13 @@ typedef struct Graphics_RadioButton
 //*****************************************************************************
 // the function prototypes
 //*****************************************************************************
-extern void Graphics_drawRadioButton(const Graphics_Context *context,
+extern void Graphics_drawRadioButton(Graphics_Context *context,
 		const Graphics_RadioButton *radioButton);
 extern bool Graphics_isRadioButtonSelected(
         const Graphics_RadioButton *radioButton,uint16_t x, uint16_t y);
-extern void Graphics_drawSelectedRadioButton(const Graphics_Context *context,
+extern void Graphics_drawSelectedRadioButton(Graphics_Context *context,
 		const Graphics_RadioButton *radioButton);
-extern void Graphics_drawReleasedRadioButton(const Graphics_Context *context,
+extern void Graphics_drawReleasedRadioButton(Graphics_Context *context,
 		const Graphics_RadioButton *radioButton);
 
 #endif /* RADIOBUTTON_H_ */

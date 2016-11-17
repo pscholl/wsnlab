@@ -31,13 +31,13 @@ typedef struct Graphics_CheckBox
 //*****************************************************************************
 // the function prototypes
 //*****************************************************************************
-extern void Graphics_drawCheckBox(const Graphics_Context *context,
+extern void Graphics_drawCheckBox(Graphics_Context *context,
 		const Graphics_CheckBox *checkBox);
 extern bool Graphics_isCheckBoxSelected(
         const Graphics_CheckBox *checkBox,uint16_t x, uint16_t y);
-extern void Graphics_drawSelectedCheckBox(const Graphics_Context *context,
+extern void Graphics_drawSelectedCheckBox(Graphics_Context *context,
 		const Graphics_CheckBox *checkBox);
-extern void Graphics_drawReleasedCheckBox(const Graphics_Context *context,
+extern void Graphics_drawReleasedCheckBox(Graphics_Context *context,
 		const Graphics_CheckBox *checkBox);
 
 #endif /* CHECKBOX_H_ */

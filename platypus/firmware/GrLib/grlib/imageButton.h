@@ -28,13 +28,13 @@ typedef struct Graphics_ImageButton
 //*****************************************************************************
 // the function prototypes
 //*****************************************************************************
-extern void Graphics_drawImageButton(const Graphics_Context *context,
+extern void Graphics_drawImageButton(Graphics_Context *context,
 		const Graphics_ImageButton *imageButton);
 extern bool Graphics_isImageButtonSelected(
         const Graphics_ImageButton *imageButton,uint16_t x, uint16_t y);
-extern void Graphics_drawSelectedImageButton(const Graphics_Context *context,
+extern void Graphics_drawSelectedImageButton(Graphics_Context *context,
 		const Graphics_ImageButton *imageButton);
-extern void Graphics_drawReleasedImageButton(const Graphics_Context *context,
+extern void Graphics_drawReleasedImageButton(Graphics_Context *context,
 		const Graphics_ImageButton *imageButton);
 
 #endif /* IMAGEBUTTON_H_ */

@@ -24,7 +24,7 @@
 //! \return None.
 //
 //*****************************************************************************
-void Graphics_drawRadioButton(const Graphics_Context *context,
+void Graphics_drawRadioButton(Graphics_Context *context,
 		const Graphics_RadioButton *radioButton)
 {
 	uint8_t outerRadius, innerRadius;
@@ -115,7 +115,7 @@ bool Graphics_isRadioButtonSelected(const Graphics_RadioButton *radioButton,
 //
 //*****************************************************************************
 
-void Graphics_drawSelectedRadioButton(const Graphics_Context *context,
+void Graphics_drawSelectedRadioButton(Graphics_Context *context,
 		const Graphics_RadioButton *radioButton)
 {
 	uint8_t outerRadius,innerRadius;
@@ -152,7 +152,7 @@ void Graphics_drawSelectedRadioButton(const Graphics_Context *context,
 //
 //*****************************************************************************
 
-void Graphics_drawReleasedRadioButton(const Graphics_Context *context,
+void Graphics_drawReleasedRadioButton(Graphics_Context *context,
 		const Graphics_RadioButton *radioButton)
 {
 	uint8_t outerRadius,innerRadius;

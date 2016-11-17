@@ -24,7 +24,7 @@
 //! \return None.
 //
 //*****************************************************************************
-void Graphics_drawImageButton(const Graphics_Context *context,
+void Graphics_drawImageButton(Graphics_Context *context,
 		const Graphics_ImageButton *imageButton)
 {
 	uint32_t origFrgnd = context->foreground;
@@ -94,7 +94,7 @@ bool Graphics_isImageButtonSelected(const Graphics_ImageButton *imageButton,
 //
 //*****************************************************************************
 
-void Graphics_drawSelectedImageButton(const Graphics_Context *context,
+void Graphics_drawSelectedImageButton(Graphics_Context *context,
 		const Graphics_ImageButton *imageButton)
 {
 	uint32_t origFrgnd = context->foreground;
@@ -132,7 +132,7 @@ void Graphics_drawSelectedImageButton(const Graphics_Context *context,
 //! \return None.
 //
 //*****************************************************************************
-void Graphics_drawReleasedImageButton(const Graphics_Context *context,
+void Graphics_drawReleasedImageButton(Graphics_Context *context,
 		const Graphics_ImageButton *imageButton)
 {
 	uint32_t origFrgnd = context->foreground;
