@@ -935,7 +935,7 @@ extern void Graphics_drawRectangle(const Graphics_Context *context,
 		const Graphics_Rectangle *rect);
 extern void Graphics_fillRectangle(const Graphics_Context *context,
 		const Graphics_Rectangle *rect);
-extern void Graphics_drawString(const Graphics_Context *context, char *string,
+extern void Graphics_drawString(const Graphics_Context *context, const char *string,
        int32_t  lLength, int32_t  x, int32_t  y, bool  opaque);
 extern int32_t  Graphics_getStringWidth(const Graphics_Context *context,
 		const char *string, int32_t  lLength);
@@ -965,7 +965,7 @@ extern uint32_t Graphics_getOffscreen4BppImageSize(uint16_t width,
 		uint16_t height);
 extern uint32_t Graphics_getOffScreen8BPPSize(uint16_t width, uint16_t height);
 extern void  Graphics_drawStringCentered(const Graphics_Context *context,
-		char *string, int32_t  length, int32_t  x, int32_t  y,
+		const char *string, int32_t  length, int32_t  x, int32_t  y,
 		bool  opaque);
 extern uint8_t Graphics_getStringHeight(const Graphics_Context *context);
 extern uint8_t Graphics_getStringMaxWidth(const Graphics_Context *context);

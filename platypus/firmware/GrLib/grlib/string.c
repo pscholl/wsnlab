@@ -173,7 +173,7 @@ int32_t Graphics_getStringWidth(const Graphics_Context *context,
 //! \return None.
 //
 //*****************************************************************************
-void Graphics_drawString(const Graphics_Context *context, char *string,
+void Graphics_drawString(const Graphics_Context *context, const char *string,
 		int32_t  length, int32_t  x, int32_t  y, bool  opaque)
 {
     int32_t  idx, x0, y0, count, off, on, bit;
@@ -746,7 +746,7 @@ uint8_t Graphics_getStringBaseline(const Graphics_Context *context)
 //
 //*****************************************************************************
 void  Graphics_drawStringCentered(const Graphics_Context *context,
-		char *string, int32_t  length, int32_t  x, int32_t  y,
+		const char *string, int32_t  length, int32_t  x, int32_t  y,
 		bool  opaque)
 {
 	Graphics_drawString(context, string, length,
