@@ -38,7 +38,7 @@ private:
 	 * <trailer>
 	 * Where command, line index, and trailers are 1 byte each.
 	 */
-	std::vector<uint8_t> cmdBuf;
+	std::vector<uint8_t> cmdBuf[2];
 
 	std::mutex refreshMutex;
 	std::thread dispThread;
@@ -51,12 +51,14 @@ private:
 	bool refreshTerminate;
 	// count frames to compute fps
 	uint32_t frameCounter;
+	uint8_t cmdBufIndex;
+	bool cmdBufUsed[2];
 
 
 	size_t pixelIndex(uint16_t x, uint16_t y);
 	void applyMask(size_t index, uint8_t mask, uint8_t color);
 
-	void refreshDisplay(uint8_t *data, int len);
+	void refreshDisplay(uint8_t *data0, uint8_t *data1, int len);
 
 	static void drawPixel(void *tp, int16_t x, int16_t y, uint16_t value);
 	static void drawMultiplePixel(void *tp, int16_t x, int16_t y, int16_t x0, int16_t count, int16_t bPP, const uint8_t *data, const uint32_t *pucPalette);

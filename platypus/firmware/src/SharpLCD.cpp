@@ -84,13 +84,16 @@ SharpLCD::SharpLCD(int width, int height) :	scs(15), vdd(31), pwm(20), spi(1) {
 	mR(pwm.period_us(16666));
 	mR(pwm.pulsewidth_us(8333));
 
-	cmdBuf.assign(2 + (2 + bwidth) * height, cmd_trail);
+	cmdBuf[0].assign(2 + (2 + bwidth) * height, cmd_trail);
 	// command
-	cmdBuf[0] = cmd_writeLine;
+	cmdBuf[0][0] = cmd_writeLine;
 	for (int row = 0; row < height; row++) {
 		// line numbers
-		cmdBuf[1 + row * (2 + bwidth)] = reverseBits(row + 1);
+		cmdBuf[0][1 + row * (2 + bwidth)] = reverseBits(row + 1);
 	}
+
+	cmdBuf[1] = cmdBuf[0];
+	cmdBufIndex = 0;
 
 	frameBuf.assign(bwidth * height, 0xFF);
 	flushBuffer(this);
@@ -112,7 +115,9 @@ void SharpLCD::enable() {
 	// start display thread
 	refreshEnabled = true;
 	refreshTerminate = false;
-	dispThread = std::thread(&SharpLCD::refreshDisplay, this, cmdBuf.data(), cmdBuf.size());
+
+	dispThread = std::thread(&SharpLCD::refreshDisplay, this,
+			cmdBuf[0].data(), cmdBuf[1].data(), cmdBuf[1].size());
 }
 
 void SharpLCD::disable() {
@@ -123,14 +128,20 @@ void SharpLCD::disable() {
 	refreshEnabled = false;
 }
 
-void SharpLCD::refreshDisplay(uint8_t *data, int len) {
+void SharpLCD::refreshDisplay(uint8_t *data0, uint8_t *data1, int len) {
 	// for good measure, wait a few ms until things have settled
 	std::this_thread::sleep_for(std::chrono::milliseconds(10));
 	std::unique_lock<std::mutex> refreshLock(refreshMutex);
 	refreshRunning = true;
 	refreshCond.notify_all();
 
+	uint8_t * const dataPtr[2] = {data0, data1};
 	while (!refreshTerminate) {
+		uint8_t index = cmdBufIndex;
+		uint8_t *data = dataPtr[index];
+		cmdBufUsed[index] = true;
+		frameCounter++;
+		refreshLock.unlock();
 		std::chrono::steady_clock::time_point t = std::chrono::steady_clock::now();
 		scs.write(true);
 		std::this_thread::sleep_for(std::chrono::microseconds(6));
@@ -138,11 +149,8 @@ void SharpLCD::refreshDisplay(uint8_t *data, int len) {
 		spi.transfer(data, NULL, len);
 		std::this_thread::sleep_for(std::chrono::microseconds(2));
 		scs.write(false);
-		frameCounter++;
 		refreshCond.notify_all();
-		refreshLock.unlock();
 		std::this_thread::sleep_until(t + std::chrono::microseconds(16666));
-		//usleep(6000); // aprox 55fps
 		refreshLock.lock();
 	}
 	refreshRunning = false;
@@ -203,8 +211,10 @@ uint32_t SharpLCD::getFrameCounter() {
 void SharpLCD::flushBuffer(void *tp) {
 	SharpLCD &t = *(SharpLCD*) tp;
 	std::unique_lock<std::mutex> refreshLock(t.refreshMutex);
+	uint8_t freeIndex = 1 - t.cmdBufIndex;
+	refreshLock.unlock();
 	// skip command and line number
-	uint8_t *dst = t.cmdBuf.data()+2;
+	uint8_t *dst = t.cmdBuf[freeIndex].data()+2;
 	uint8_t *src = t.frameBuf.data();
 	for (uint16_t i=0; i<t.c.heigth; i++) {
 		for (size_t j=0; j<t.bwidth; j++) {
@@ -212,8 +222,10 @@ void SharpLCD::flushBuffer(void *tp) {
 		}
 		dst += 2; // skip trailer and line number
 	}
-	uint32_t c = t.frameCounter;
-	while (t.refreshRunning && t.frameCounter == c) {
+	refreshLock.lock();
+	t.cmdBufIndex = freeIndex;
+	t.cmdBufUsed[freeIndex] = false;
+	while (!t.cmdBufUsed[freeIndex] && t.refreshRunning) {
 		t.refreshCond.wait(refreshLock);
 	}
 }
