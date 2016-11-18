@@ -14,8 +14,8 @@ void testBasic1() {
 
 	Graphics_Context g;
 	Graphics_initContext(&g, lcd);
-	Graphics_setBackgroundColor(&g, ClrWhite);
-	Graphics_setForegroundColor(&g, ClrBlack);
+	Graphics_setBackgroundColor(&g, ClrBlack);
+	Graphics_setForegroundColor(&g, ClrWhite);
 	Graphics_setFont(&g, &g_sFontFixed6x8);
 	Graphics_clearDisplay(&g);
 
@@ -31,6 +31,8 @@ void testBasic1() {
 	r.xMin += 30;
 	r.xMax += 30;
 	Graphics_fillRectangle(&g, &r);
+	
+	Graphics_drawLine(&g, 10, 20, 86, 76);
 
 	Graphics_drawString(&g, "Hello World!", -1, 10, 60, false);
 	Graphics_drawString(&g, "Hello World!", -1, 15, 65, true);
@@ -62,6 +64,8 @@ void testBasic2() {
 	r.xMin += 30;
 	r.xMax += 30;
 	g.fillRectangle(r);
+
+	g.drawLine(10, 20, 86, 76);
 
 	g.drawString("Hello World!", 10, 60, false);
 	g.drawString("Hello World!", 15, 65, true);
