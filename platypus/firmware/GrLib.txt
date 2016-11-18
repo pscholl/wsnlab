@@ -16,3 +16,8 @@ Issues:
 - init functions for offscreen images are declared in grlib.h
 	but no implementation is provided (might be part of
 	stellaris and tiva-c graphics library)
+- grlib.h defines such macros as min/max which causes errors in other headers.
+	The following results in errors in stl_vector.h:
+	#include <string>
+	#include <grlib.h>
+	#include <vector>
