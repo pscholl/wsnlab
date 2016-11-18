@@ -210,9 +210,7 @@ uint32_t SharpLCD::getFrameCounter() {
 
 void SharpLCD::flushBuffer(void *tp) {
 	SharpLCD &t = *(SharpLCD*) tp;
-	std::unique_lock<std::mutex> refreshLock(t.refreshMutex);
 	uint8_t freeIndex = 1 - t.cmdBufIndex;
-	refreshLock.unlock();
 	// skip command and line number
 	uint8_t *dst = t.cmdBuf[freeIndex].data()+2;
 	uint8_t *src = t.frameBuf.data();
@@ -222,7 +220,7 @@ void SharpLCD::flushBuffer(void *tp) {
 		}
 		dst += 2; // skip trailer and line number
 	}
-	refreshLock.lock();
+	std::unique_lock<std::mutex> refreshLock(t.refreshMutex);
 	t.cmdBufIndex = freeIndex;
 	t.cmdBufUsed[freeIndex] = false;
 	while (!t.cmdBufUsed[freeIndex] && t.refreshRunning) {
