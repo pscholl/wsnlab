@@ -1,0 +1,18 @@
+The MSP430 Graphics Library (GrLib) can be downloaded as part of
+MSPWare by Texas Instruments:
+	http://www.ti.com/tool/MSPWare
+or here:
+	http://www.ti.com/tool/msp-grlib
+	
+The internet mentions grlib versions for Stellaris and Tiva-c
+	http://www.ti.com/tool/sw-grl
+	http://www.ti.com/tool/sw-tm4c
+
+Issues:
+- draw string functions use char* instead of const char*
+- in struct Graphics_Display, the field for height is called heigth 
+- usage of global context instead of function argument in
+	button.c, checkbox.c, imageButton.c, and radioButton.c
+- init functions for offscreen images are declared in grlib.h
+	but no implementation is provided (might be part of
+	stellaris and tiva-c graphics library)
