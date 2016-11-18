@@ -1,6 +1,7 @@
 #ifndef GRLIB_HPP_
 #define GRLIB_HPP_
 
+#include <string>
 #include "grlib.h"
 
 class GrContext : Graphics_Context {
