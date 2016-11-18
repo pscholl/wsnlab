@@ -100,7 +100,9 @@ SharpLCD::SharpLCD(int width, int height) :	scs(15), vdd(31), pwm(20), spi(1) {
 }
 SharpLCD::~SharpLCD() {
 	refreshTerminate = true;
-	dispThread.join();
+	if (refreshEnabled) {
+		dispThread.join();
+	}
 	scs.write(false);
 	vdd.write(false);
 	pwm.enable(false);
@@ -122,10 +124,12 @@ void SharpLCD::enable() {
 
 void SharpLCD::disable() {
 	refreshTerminate = true;
-	dispThread.join();
+	if (refreshEnabled) {
+		dispThread.join();
+		refreshEnabled = false;
+	}
 	mR(vdd.write(false));
 	mR(pwm.enable(false));
-	refreshEnabled = false;
 }
 
 void SharpLCD::refreshDisplay(uint8_t *data0, uint8_t *data1, int len) {
