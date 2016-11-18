@@ -1,6 +1,11 @@
 
 #include "grlib.h"
 
+// stuff from grlib.h moved here to avoid conflicts with STL headers
+#define min(a, b)               (((a) < (b)) ? (a) : (b))
+#define max(a, b)               (((a) < (b)) ? (b) : (a))
+
+
 //*****************************************************************************
 //
 //! \addtogroup rectangle_api
