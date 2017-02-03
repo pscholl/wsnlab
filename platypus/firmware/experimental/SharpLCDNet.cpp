@@ -218,8 +218,10 @@ void sendFrameBuf(uint8_t *data, size_t size) {
 	using boost::asio::ip::udp;
 	static boost::asio::io_service io;
 	static udp::socket s(io, udp::endpoint(udp::v4(), 0));
-	static udp::endpoint t(boost::asio::ip::address::from_string("255.255.255.255"), 9090);
-	s.send_to(boost::asio::buffer(data, size), t);
+	static udp::endpoint t(boost::asio::ip::address::from_string("192.168.43.62"), 9090);
+	static boost::system::error_code e;
+	s.non_blocking(1);
+	s.send_to(boost::asio::buffer(data, size), t, 0, e);
 }
 
 void SharpLCD::flushBuffer(void *tp) {
