@@ -30,6 +30,12 @@
 
 # Backups from Editors
 *~
+*.bak
+
+# Eclipse stuff
+.settings/
+.cproject
+.project
 
 # Debug files
 *.dSYM/
